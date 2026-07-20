@@ -1,0 +1,4007 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>YT Souq — سوق المبرمجين</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet" />
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+    <style>
+        /* ═══════════════════════════════════════════════════════════
+           ROOT / VARIABLES
+           ═══════════════════════════════════════════════════════════ */
+        :root {
+            --bg: #0d0d0d;
+            --surface: #141414;
+            --surface2: #1a1a1a;
+            --border: #222;
+            --border2: #2a2a2a;
+            --gold: #c9a227;
+            --gold2: #e8b83a;
+            --cyan: #00d4ff;
+            --cyan2: #00a8cc;
+            --white: #f0f0f0;
+            --muted: #888;
+            --muted2: #555;
+            --green: #22c55e;
+            --orange: #f97316;
+            --text: #d0d0d0;
+            --font: 'Cairo', sans-serif;
+            --mono: 'IBM Plex Mono', monospace;
+        }
+
+        /* ═══════════════════════════════════════════════════════════
+           RESET & BASE
+           ═══════════════════════════════════════════════════════════ */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: auto;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--font);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ═══════════════════════════════════════════════════════════
+           PAGE MANAGEMENT
+           ═══════════════════════════════════════════════════════════ */
+        .page {
+            display: none;
+        }
+        .page.active {
+            display: block;
+        }
+
+        /* ═══════════════════════════════════════════════════════════
+           SCROLLBAR
+           ═══════════════════════════════════════════════════════════ */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--gold);
+            border-radius: 2px;
+        }
+
+        /* ═══════════════════════════════════════════════════════════
+           NAV
+           ═══════════════════════════════════════════════════════════ */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(13, 13, 13, 0.95);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border);
+            padding: 0 32px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .yt-logo-sm {
+            width: 38px;
+            height: 38px;
+        }
+        .yt-logo-md {
+            width: 54px;
+            height: 54px;
+        }
+        .yt-logo-lg {
+            width: 80px;
+            height: 80px;
+        }
+
+        .logo-text {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--white);
+        }
+        .logo-text span {
+            color: var(--gold);
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 14px;
+            padding: 6px 14px;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+        .nav-links a:hover {
+            color: var(--white);
+            background: var(--surface2);
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-toggle {
+            display: none;
+            width: 40px;
+            height: 40px;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            border: 1px solid var(--border2);
+            border-radius: 8px;
+            cursor: pointer;
+            color: var(--white);
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+        .nav-toggle:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+
+        .mobile-nav-menu {
+            display: none;
+            position: fixed;
+            top: 64px;
+            left: 0;
+            right: 0;
+            background: rgba(13, 13, 13, 0.98);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border);
+            padding: 14px;
+            z-index: 999;
+            flex-direction: column;
+            gap: 4px;
+            max-height: calc(100vh - 64px);
+            overflow-y: auto;
+        }
+        .mobile-nav-menu.open {
+            display: flex;
+        }
+        .mobile-nav-menu a {
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 15px;
+            padding: 13px 14px;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+        .mobile-nav-menu a:hover,
+        .mobile-nav-menu a:active {
+            color: var(--white);
+            background: var(--surface2);
+        }
+        .mobile-nav-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+            padding-top: 14px;
+            border-top: 1px solid var(--border);
+        }
+        .mobile-nav-actions .btn {
+            flex: 1;
+            justify-content: center;
+            white-space: nowrap;
+        }
+
+        /* ─── BUTTONS ─── */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 9px 20px;
+            border-radius: 10px;
+            border: none;
+            font-family: var(--font);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s;
+            text-decoration: none;
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: var(--muted);
+            border: 1px solid var(--border2);
+        }
+        .btn-ghost:hover {
+            color: var(--white);
+            border-color: var(--muted);
+        }
+
+        .btn-gold {
+            background: linear-gradient(135deg, var(--gold), var(--gold2));
+            color: #0d0d0d;
+        }
+        .btn-gold:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(201, 162, 39, 0.35);
+        }
+
+        .btn-cyan {
+            background: linear-gradient(135deg, var(--cyan2), var(--cyan));
+            color: #0d0d0d;
+        }
+        .btn-cyan:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(0, 212, 255, 0.3);
+        }
+
+        .avatar-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--gold), var(--cyan));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            color: #0d0d0d;
+            cursor: pointer;
+            border: none;
+            overflow: hidden;
+        }
+        .avatar-btn.has-photo {
+            background-size: cover;
+            background-position: center;
+            font-size: 0;
+        }
+
+        /* ═══════════════════════════════════════════════════════════
+           HERO
+           ═══════════════════════════════════════════════════════════ */
+        .hero {
+            padding: 120px 32px 80px;
+            max-width: 1240px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            border-radius: 20px;
+            background: rgba(201, 162, 39, 0.1);
+            border: 1px solid rgba(201, 162, 39, 0.25);
+            font-size: 12px;
+            color: var(--gold);
+            margin-bottom: 20px;
+        }
+        .hero-badge::before {
+            content: '●';
+            font-size: 8px;
+            color: var(--gold);
+        }
+
+        .hero h1 {
+            font-size: clamp(36px, 4.5vw, 60px);
+            font-weight: 900;
+            line-height: 1.15;
+            color: var(--white);
+            margin-bottom: 18px;
+        }
+        .hero h1 .accent-gold {
+            color: var(--gold);
+        }
+        .hero h1 .accent-cyan {
+            color: var(--cyan);
+        }
+
+        .hero-desc {
+            font-size: 16px;
+            line-height: 1.8;
+            color: var(--muted);
+            margin-bottom: 32px;
+            max-width: 480px;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 32px;
+            margin-top: 48px;
+            padding-top: 32px;
+            border-top: 1px solid var(--border);
+        }
+        .stat-val {
+            font-size: 28px;
+            font-weight: 900;
+            color: var(--white);
+        }
+        .stat-val span {
+            color: var(--gold);
+        }
+        .stat-lbl {
+            font-size: 12px;
+            color: var(--muted);
+            margin-top: 2px;
+        }
+
+        /* ═══════════════════════════════════════════════════════════
+           TERMINAL CARD
+           ═══════════════════════════════════════════════════════════ */
+        .terminal-card {
+            background: var(--surface);
+            border: 1px solid var(--border2);
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .terminal-bar {
+            background: var(--surface2);
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .terminal-dots {
+            display: flex;
+            gap: 7px;
+        }
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        .dot-r {
+            background: #ff5f57;
+        }
+        .dot-y {
+            background: #ffbd2e;
+        }
+        .dot-g {
+            background: #28c840;
+        }
+
+        .terminal-title {
+            font-size: 12px;
+            color: var(--muted);
+            font-family: var(--mono);
+        }
+
+        .terminal-body {
+            padding: 20px 20px 16px;
+            font-family: var(--mono);
+        }
+
+        .terminal-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 16px;
+            margin-bottom: 16px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 10px;
+            border: 1px solid var(--border);
+        }
+        .terminal-logo-box {
+            width: 52px;
+            height: 52px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--gold), var(--cyan));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 15px;
+            color: #0d0d0d;
+            font-family: var(--mono);
+        }
+        .terminal-header-text {
+            font-size: 11px;
+            color: var(--muted);
+        }
+        .terminal-header-text strong {
+            display: block;
+            font-size: 14px;
+            color: var(--white);
+            margin-bottom: 2px;
+        }
+
+        .terminal-line {
+            font-size: 12px;
+            margin-bottom: 8px;
+        }
+        .t-prompt {
+            color: var(--gold);
+        }
+        .t-cmd {
+            color: var(--white);
+        }
+        .t-ok {
+            color: var(--green);
+        }
+        .t-val {
+            color: var(--cyan);
+        }
+        .t-blink {
+            display: inline-block;
+            animation: blink 1s step-end infinite;
+            color: var(--cyan);
+        }
+        @keyframes blink {
+            50% {
+                opacity: 0;
+            }
+        }
+
+        .terminal-footer {
+            display: flex;
+            justify-content: space-between;
+            font-size: 10px;
+            color: var(--muted2);
+            font-family: var(--mono);
+            padding-top: 12px;
+            margin-top: 8px;
+            border-top: 1px solid var(--border);
+        }
+
+        /* ═══════════════════════════════════════════════════════════
+           FEATURES ROW
+           ═══════════════════════════════════════════════════════════ */
+        .features-row {
+            max-width: 1240px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            padding: 0 32px 80px;
+        }
+
+        .feat-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            transition: border-color 0.25s;
+        }
+        .feat-card:hover {
+            border-color: var(--gold);
+        }
+
+        .feat-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+        .feat-icon.gold {
+            background: rgba(201, 162, 39, 0.12);
+        }
+        .feat-icon.cyan {
+            background: rgba(0, 212, 255, 0.1);
+        }
+        .feat-icon.green {
+            background: rgba(34, 197, 94, 0.1);
+        }
+
+        .feat-card h3 {
+            font-size: 15px;
+            color: var(--white);
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+        .feat-card p {
+            font-size: 13px;
+            color: var(--muted);
+            line-height: 1.7;
+        }
+
+        /* ═══════════════════════════════════════════════════════════
+           SECTION LABEL
+           ═══════════════════════════════════════════════════════════ */
+        .section-eyebrow {
+            font-size: 11px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--muted2);
+            font-family: var(--mono);
+            margin-bottom: 8px;
+        }
+        .section-title {
+            font-size: clamp(24px, 3vw, 36px);
+            font-weight: 900;
+            color: var(--white);
+            margin-bottom: 8px;
+        }
+        .section-title .accent-gold {
+            color: var(--gold);
+        }
+        .section-title .accent-cyan {
+            color: var(--cyan);
+        }
+        .section-sub {
+            font-size: 14px;
+            color: var(--muted);
+        }
+
+        .section-header-row {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 32px;
+        }
+
+        /* ═══════════════════════════════════════════════════════════
+           PROGRAMMERS GRID
+           ═══════════════════════════════════════════════════════════ */
+        .programmers-section {
+            padding: 0 32px 80px;
+            max-width: 1240px;
+            margin: 0 auto;
+        }
+
+        .prog-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+        }
+
+        .prog-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            overflow: hidden;
+            transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
+            cursor: pointer;
+        }
+        .prog-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--gold);
+            box-shadow: 0 12px 32px rgba(201, 162, 39, 0.15);
+        }
+
+        .prog-card-header {
+            height: 80px;
+            position: relative;
+            display: flex;
+            align-items: flex-end;
+            padding: 0 14px 8px;
+        }
+
+        .prog-card-header.gold-grad {
+            background: linear-gradient(135deg, #a07810 0%, #c9a227 100%);
+        }
+        .prog-card-header.cyan-grad {
+            background: linear-gradient(135deg, #004455 0%, #00a8cc 100%);
+        }
+        .prog-card-header.teal-grad {
+            background: linear-gradient(135deg, #005566 0%, #007c9e 100%);
+        }
+        .prog-card-header.dark-grad {
+            background: linear-gradient(135deg, #222 0%, #333 100%);
+        }
+
+        .prog-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 3px 9px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 700;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(6px);
+            color: var(--white);
+        }
+        .prog-badge.hot {
+            background: var(--gold);
+            color: #0d0d0d;
+        }
+        .prog-badge.new {
+            background: var(--cyan);
+            color: #0d0d0d;
+        }
+
+        .prog-avatar {
+            position: absolute;
+            bottom: -22px;
+            right: 14px;
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            background: var(--bg);
+            border: 2px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--white);
+        }
+
+        .prog-card-body {
+            padding: 30px 14px 14px;
+        }
+
+        .prog-name {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--white);
+            text-align: right;
+        }
+        .prog-handle {
+            font-size: 11px;
+            color: var(--cyan);
+            font-family: var(--mono);
+            text-align: right;
+            margin-bottom: 6px;
+        }
+        .prog-role {
+            font-size: 11px;
+            color: var(--muted);
+            text-align: right;
+            margin-bottom: 10px;
+        }
+
+        .prog-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 11px;
+            color: var(--muted2);
+            margin-bottom: 12px;
+        }
+        .prog-meta span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .prog-rating {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 12px;
+            color: var(--gold);
+            font-weight: 700;
+        }
+        .prog-sales {
+            font-size: 11px;
+            color: var(--muted);
+        }
+
+        .prog-card-footer {
+            padding: 0 14px 14px;
+        }
+
+        .view-btn {
+            width: 100%;
+            padding: 9px;
+            border-radius: 8px;
+            border: none;
+            background: rgba(201, 162, 39, 0.1);
+            color: var(--gold);
+            font-family: var(--font);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid rgba(201, 162, 39, 0.2);
+        }
+        .view-btn:hover {
+            background: var(--gold);
+            color: #0d0d0d;
+        }
+
+        /* ═══════════════════════════════════════════════════════════
+           FILES GRID
+           ═══════════════════════════════════════════════════════════ */
+        .files-section {
+            padding: 0 32px 80px;
+            max-width: 1240px;
+            margin: 0 auto;
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .filter-tab {
+            padding: 7px 18px;
+            border-radius: 20px;
+            border: 1px solid var(--border2);
+            background: transparent;
+            color: var(--muted);
+            font-family: var(--font);
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .filter-tab.active,
+        .filter-tab:hover {
+            background: var(--gold);
+            color: #0d0d0d;
+            border-color: var(--gold);
+            font-weight: 600;
+        }
+
+        .files-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+
+        .file-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.25s, border-color 0.25s;
+            cursor: pointer;
+        }
+        .file-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--muted2);
+        }
+
+        .file-preview {
+            background: var(--surface2);
+            height: 130px;
+            padding: 14px 16px;
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--muted2);
+            line-height: 1.7;
+            overflow: hidden;
+            position: relative;
+            border-bottom: 1px solid var(--border);
+        }
+        .file-preview::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 40px;
+            background: linear-gradient(transparent, var(--surface2));
+        }
+        .file-preview .kw {
+            color: var(--cyan);
+        }
+        .file-preview .fn {
+            color: var(--gold);
+        }
+        .file-preview .str {
+            color: var(--green);
+        }
+        .file-preview .cm {
+            color: var(--muted2);
+        }
+
+        .file-lang {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 9px;
+            padding: 2px 8px;
+            border-radius: 4px;
+            background: rgba(0, 212, 255, 0.1);
+            color: var(--cyan);
+            font-family: var(--mono);
+        }
+        .file-dot {
+            position: absolute;
+            top: 12px;
+            right: 14px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+        .file-dot.green {
+            background: #28c840;
+        }
+        .file-dot.yellow {
+            background: #ffbd2e;
+        }
+
+        .file-body {
+            padding: 14px;
+        }
+        .file-title {
+            font-size: 14px;
+            color: var(--white);
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .file-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+        .file-tag {
+            padding: 3px 9px;
+            border-radius: 4px;
+            font-size: 10px;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            color: var(--muted);
+        }
+        .file-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 11px;
+            color: var(--muted2);
+        }
+        .file-seller {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .file-seller-avatar {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--cyan2), var(--cyan));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 9px;
+            font-weight: 700;
+            color: #0d0d0d;
+        }
+
+        .file-price-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 14px 14px;
+            border-top: 1px solid var(--border);
+        }
+        .file-price {
+            font-size: 18px;
+            font-weight: 900;
+            color: var(--gold);
+        }
+        .file-price-old {
+            font-size: 12px;
+            color: var(--muted2);
+            text-decoration: line-through;
+            margin-right: 4px;
+        }
+        .buy-btn {
+            padding: 7px 16px;
+            border-radius: 8px;
+            border: none;
+            background: linear-gradient(135deg, var(--gold), var(--gold2));
+            color: #0d0d0d;
+            font-family: var(--font);
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .buy-btn:hover {
+            transform: scale(1.04);
+            box-shadow: 0 4px 14px rgba(201, 162, 39, 0.3);
+        }
+
+        /* ═══════════════════════════════════════════════════════════
+           SCROLLING TICKER
+           ═══════════════════════════════════════════════════════════ */
+        .ticker-wrap {
+            overflow: hidden;
+            background: var(--surface);
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            padding: 14px 0;
+            margin-bottom: 80px;
+        }
+        .ticker-track {
+            display: flex;
+            gap: 48px;
+            white-space: nowrap;
+            animation: ticker 22s linear infinite;
+            width: max-content;
+        }
+        @keyframes ticker {
+            from {
+                transform: translateX(0);
+            }
+            to {
+                transform: translateX(-50%);
+            }
+        }
+        .ticker-item {
+            font-size: 13px;
+            color: var(--muted2);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .ticker-item span {
+            color: var(--gold);
+            font-size: 9px;
+        }
+
+        /* ═══════════════════════════════════════════════════════════
+           FOOTER
+           ═══════════════════════════════════════════════════════════ */
+        footer {
+            background: var(--surface);
+            border-top: 1px solid var(--border);
+            padding: 48px 32px 24px;
+        }
+        .footer-grid {
+            max-width: 1240px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 40px;
+            padding-bottom: 40px;
+            border-bottom: 1px solid var(--border);
+        }
+        .footer-brand p {
+            font-size: 13px;
+            color: var(--muted);
+            line-height: 1.8;
+            margin-top: 12px;
+            max-width: 280px;
+        }
+        .footer-col h4 {
+            font-size: 11px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--muted2);
+            font-family: var(--mono);
+            margin-bottom: 14px;
+        }
+        .footer-col a {
+            display: block;
+            font-size: 13px;
+            color: var(--muted);
+            text-decoration: none;
+            margin-bottom: 9px;
+            transition: color 0.2s;
+        }
+        .footer-col a:hover {
+            color: var(--gold);
+        }
+        .footer-bottom {
+            max-width: 1240px;
+            margin: 24px auto 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: var(--muted2);
+        }
+
+        /* ═══════════════════════════════════════════════════════════
+           CHAT PAGE
+           ═══════════════════════════════════════════════════════════ */
+        #page-chat {
+            display: none;
+            position: fixed;
+            inset: 0;
+            flex-direction: column;
+            background: var(--bg);
+            z-index: 500;
+        }
+        #page-chat.active {
+            display: flex;
+        }
+
+        .chat-layout {
+            display: flex;
+            flex: 1;
+            margin-top: 64px;
+            height: calc(100vh - 64px);
+        }
+
+        .chat-sidebar {
+            width: 300px;
+            flex-shrink: 0;
+            background: var(--surface);
+            border-left: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .sidebar-header {
+            padding: 20px 16px 14px;
+            border-bottom: 1px solid var(--border);
+        }
+        .sidebar-header h3 {
+            font-size: 15px;
+            color: var(--white);
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 9px 14px;
+            background: var(--surface2);
+            border: 1px solid var(--border2);
+            border-radius: 8px;
+            color: var(--text);
+            font-family: var(--font);
+            font-size: 13px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .search-input::placeholder {
+            color: var(--muted2);
+        }
+        .search-input:focus {
+            border-color: var(--gold);
+        }
+
+        .contact-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px 0;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            cursor: pointer;
+            transition: background 0.15s;
+            position: relative;
+        }
+        .contact-item:hover,
+        .contact-item.active {
+            background: var(--surface2);
+        }
+        .contact-item.active::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 8px;
+            bottom: 8px;
+            width: 3px;
+            background: var(--gold);
+            border-radius: 2px;
+        }
+
+        .contact-avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+            color: #0d0d0d;
+            position: relative;
+        }
+        .contact-avatar.gold-av {
+            background: linear-gradient(135deg, var(--gold), var(--gold2));
+        }
+        .contact-avatar.cyan-av {
+            background: linear-gradient(135deg, var(--cyan2), var(--cyan));
+        }
+        .contact-avatar.green-av {
+            background: linear-gradient(135deg, #16a34a, #22c55e);
+        }
+        .contact-avatar.purple-av {
+            background: linear-gradient(135deg, #7c3aed, #a78bfa);
+        }
+
+        .online-dot {
+            position: absolute;
+            bottom: 1px;
+            left: 1px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--green);
+            border: 2px solid var(--surface);
+        }
+        .offline-dot {
+            position: absolute;
+            bottom: 1px;
+            left: 1px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--muted2);
+            border: 2px solid var(--surface);
+        }
+
+        .contact-info {
+            flex: 1;
+            min-width: 0;
+        }
+        .contact-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--white);
+        }
+        .contact-role {
+            font-size: 11px;
+            color: var(--muted);
+            margin-top: 2px;
+        }
+        .contact-preview {
+            font-size: 11px;
+            color: var(--muted2);
+            margin-top: 3px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .contact-meta {
+            text-align: left;
+            flex-shrink: 0;
+        }
+        .contact-time {
+            font-size: 10px;
+            color: var(--muted2);
+        }
+        .unread-badge {
+            margin-top: 4px;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--gold);
+            color: #0d0d0d;
+            font-size: 9px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: auto;
+        }
+
+        .chat-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .chat-header {
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--bg);
+        }
+        .chat-header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .chat-header-info h3 {
+            font-size: 15px;
+            color: var(--white);
+            font-weight: 700;
+        }
+        .chat-header-info p {
+            font-size: 12px;
+            color: var(--green);
+        }
+        .chat-header-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .chat-back-btn {
+            display: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            color: var(--white);
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .icon-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--muted);
+            font-size: 15px;
+            transition: all 0.2s;
+        }
+        .icon-btn:hover {
+            color: var(--gold);
+            border-color: var(--gold);
+        }
+
+        .messages-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .msg {
+            display: flex;
+            gap: 10px;
+            max-width: 70%;
+        }
+        .msg.sent {
+            flex-direction: row-reverse;
+            align-self: flex-start;
+        }
+        .msg.recv {
+            align-self: flex-end;
+        }
+
+        .msg-avatar {
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            color: #0d0d0d;
+        }
+
+        .msg-bubble {
+            padding: 12px 16px;
+            border-radius: 14px;
+            font-size: 14px;
+            line-height: 1.6;
+            max-width: 360px;
+        }
+        .msg.sent .msg-bubble {
+            background: rgba(201, 162, 39, 0.12);
+            border: 1px solid rgba(201, 162, 39, 0.2);
+            color: var(--white);
+            border-radius: 14px 4px 14px 14px;
+        }
+        .msg.recv .msg-bubble {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            color: var(--text);
+            border-radius: 4px 14px 14px 14px;
+        }
+        .msg-time {
+            font-size: 10px;
+            color: var(--muted2);
+            margin-top: 5px;
+            text-align: left;
+        }
+        .msg.sent .msg-time {
+            text-align: right;
+        }
+
+        .msg-code {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 10px 12px;
+            margin-top: 8px;
+            font-family: var(--mono);
+            font-size: 11px;
+            color: var(--cyan);
+            line-height: 1.7;
+        }
+
+        .chat-input-area {
+            padding: 16px 24px;
+            border-top: 1px solid var(--border);
+            background: var(--bg);
+            display: flex;
+            align-items: flex-end;
+            gap: 10px;
+        }
+
+        .chat-input-box {
+            flex: 1;
+            background: var(--surface);
+            border: 1px solid var(--border2);
+            border-radius: 12px;
+            padding: 12px 16px;
+            color: var(--text);
+            font-family: var(--font);
+            font-size: 14px;
+            outline: none;
+            resize: none;
+            min-height: 48px;
+            max-height: 120px;
+            overflow-y: auto;
+            transition: border-color 0.2s;
+            direction: rtl;
+        }
+        .chat-input-box::placeholder {
+            color: var(--muted2);
+        }
+        .chat-input-box:focus {
+            border-color: var(--gold);
+        }
+
+        .send-btn {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--gold), var(--gold2));
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: #0d0d0d;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+        .send-btn:hover {
+            transform: scale(1.07);
+            box-shadow: 0 4px 14px rgba(201, 162, 39, 0.35);
+        }
+
+        .day-divider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 11px;
+            color: var(--muted2);
+            font-family: var(--mono);
+        }
+        .day-divider::before,
+        .day-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .chat-empty {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+            gap: 16px;
+            text-align: center;
+            padding: 40px;
+        }
+        .chat-empty-icon {
+            width: 72px;
+            height: 72px;
+            border-radius: 18px;
+            background: rgba(201, 162, 39, 0.1);
+            border: 1px solid rgba(201, 162, 39, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+        }
+        .chat-empty h3 {
+            font-size: 18px;
+            color: var(--white);
+        }
+        .chat-empty p {
+            font-size: 14px;
+            color: var(--muted);
+        }
+
+        /* ═══════════════════════════════════════════════════════════
+           BG WATERMARK
+           ═══════════════════════════════════════════════════════════ */
+        .bg-watermark {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 0;
+            opacity: 0.03;
+        }
+        .bg-watermark-text {
+            font-size: clamp(20px, 3vw, 28px);
+            color: var(--white);
+            font-weight: 900;
+            font-family: var(--font);
+            line-height: 2.2;
+            white-space: nowrap;
+            position: absolute;
+            animation: wm-drift 60s linear infinite;
+            top: -20%;
+            left: -10%;
+            width: 130%;
+        }
+        @keyframes wm-drift {
+            from {
+                transform: translateX(0);
+            }
+            to {
+                transform: translateX(-8%);
+            }
+        }
+
+        /* ═══════════════════════════════════════════════════════════
+           AI CHAT WIDGET (HOME PAGE)
+           ═══════════════════════════════════════════════════════════ */
+        .ai-chat-widget {
+            position: fixed;
+            bottom: 90px;
+            left: 28px;
+            z-index: 900;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 12px;
+        }
+
+        .ai-chat-toggle {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--gold), var(--gold2));
+            border: none;
+            cursor: grab;
+            box-shadow: 0 8px 28px rgba(201, 162, 39, 0.45);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            color: #0d0d0d;
+            transition: all 0.3s ease;
+            position: relative;
+            touch-action: none;
+        }
+        .ai-chat-toggle:active {
+            cursor: grabbing;
+        }
+        .ai-chat-widget.dragging .ai-chat-toggle {
+            cursor: grabbing;
+            transition: none;
+        }
+        .ai-chat-toggle:hover {
+            transform: scale(1.08) rotate(-6deg);
+            box-shadow: 0 12px 36px rgba(201, 162, 39, 0.6);
+        }
+        .ai-chat-toggle .pulse-ring {
+            position: absolute;
+            inset: -6px;
+            border-radius: 50%;
+            border: 2px solid rgba(201, 162, 39, 0.3);
+            animation: pulse-ring 2s ease-out infinite;
+        }
+        @keyframes pulse-ring {
+            0% {
+                transform: scale(1);
+                opacity: 0.7;
+            }
+            100% {
+                transform: scale(1.5);
+                opacity: 0;
+            }
+        }
+        .ai-chat-toggle .badge-dot {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--green);
+            border: 2px solid var(--bg);
+            animation: blink-dot 1.8s ease-in-out infinite;
+        }
+        @keyframes blink-dot {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.25;
+            }
+        }
+
+        .ai-chat-box {
+            width: 360px;
+            max-height: 480px;
+            background: var(--surface);
+            border: 1px solid var(--border2);
+            border-radius: 18px;
+            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.7);
+            overflow: hidden;
+            display: none;
+            flex-direction: column;
+            transition: all 0.35s ease;
+        }
+        .ai-chat-box.open {
+            display: flex;
+        }
+
+        .ai-chat-header {
+            padding: 16px 20px;
+            background: var(--surface2);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .ai-chat-header .ai-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .ai-chat-header .ai-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--cyan2), var(--cyan));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 700;
+            color: #0d0d0d;
+        }
+        .ai-chat-header .ai-name {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--white);
+        }
+        .ai-chat-header .ai-status {
+            font-size: 11px;
+            color: var(--green);
+        }
+        .ai-chat-header .ai-close {
+            background: transparent;
+            border: none;
+            color: var(--muted2);
+            cursor: pointer;
+            font-size: 18px;
+            transition: color 0.2s;
+            padding: 4px 8px;
+            border-radius: 6px;
+        }
+        .ai-chat-header .ai-close:hover {
+            color: var(--white);
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .ai-chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-height: 320px;
+            min-height: 200px;
+        }
+
+        .ai-msg {
+            display: flex;
+            gap: 8px;
+            align-items: flex-start;
+        }
+        .ai-msg .ai-msg-avatar {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, var(--cyan2), var(--cyan));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 700;
+            color: #0d0d0d;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        .ai-msg .ai-msg-bubble {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            padding: 10px 14px;
+            border-radius: 12px 4px 12px 12px;
+            font-size: 13px;
+            line-height: 1.7;
+            color: var(--text);
+            max-width: 85%;
+        }
+        .ai-msg.user {
+            flex-direction: row-reverse;
+        }
+        .ai-msg.user .ai-msg-bubble {
+            background: rgba(201, 162, 39, 0.12);
+            border: 1px solid rgba(201, 162, 39, 0.2);
+            border-radius: 4px 12px 12px 12px;
+        }
+        .ai-msg.user .ai-msg-avatar {
+            background: linear-gradient(135deg, var(--gold), var(--gold2));
+        }
+
+        .ai-msg .ai-time {
+            font-size: 9px;
+            color: var(--muted2);
+            margin-top: 4px;
+        }
+
+        .ai-typing {
+            display: flex;
+            gap: 5px;
+            padding: 6px 0;
+            align-items: center;
+        }
+        .ai-typing span {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--muted2);
+            animation: typing-bounce 1.4s ease-in-out infinite;
+        }
+        .ai-typing span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        .ai-typing span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        @keyframes typing-bounce {
+            0%,
+            60%,
+            100% {
+                transform: translateY(0);
+                opacity: 0.4;
+            }
+            30% {
+                transform: translateY(-8px);
+                opacity: 1;
+            }
+        }
+
+        .ai-chat-input-area {
+            padding: 12px 16px 16px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+            background: var(--surface);
+        }
+        .ai-chat-input-area input {
+            flex: 1;
+            background: var(--surface2);
+            border: 1px solid var(--border2);
+            border-radius: 10px;
+            padding: 10px 14px;
+            color: var(--text);
+            font-family: var(--font);
+            font-size: 13px;
+            outline: none;
+            transition: border-color 0.2s;
+            direction: rtl;
+        }
+        .ai-chat-input-area input::placeholder {
+            color: var(--muted2);
+        }
+        .ai-chat-input-area input:focus {
+            border-color: var(--gold);
+        }
+        .ai-chat-input-area .ai-send-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--gold), var(--gold2));
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            color: #0d0d0d;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+        .ai-chat-input-area .ai-send-btn:hover {
+            transform: scale(1.06);
+            box-shadow: 0 4px 14px rgba(201, 162, 39, 0.3);
+        }
+
+        .ai-suggestions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            padding: 0 16px 10px;
+            background: var(--surface);
+        }
+        .ai-suggestions button {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 4px 12px;
+            font-size: 11px;
+            color: var(--muted);
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: var(--font);
+        }
+        .ai-suggestions button:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+            background: rgba(201, 162, 39, 0.06);
+        }
+
+        /* ═══════════════════════════════════════════════════════════
+           RESPONSIVE — PC (default) / iPad (≤1024) / Tablet (≤900)
+                        / Mobile (≤600) / Small phone (≤380)
+           ═══════════════════════════════════════════════════════════ */
+
+        /* ── iPad landscape / small laptops ── */
+        @media (max-width: 1024px) {
+            .hero {
+                gap: 36px;
+                padding: 110px 24px 60px;
+            }
+            .prog-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            .files-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .features-row {
+                grid-template-columns: repeat(2, 1fr);
+                padding: 0 24px 60px;
+            }
+            .programmers-section,
+            .files-section {
+                padding-left: 24px;
+                padding-right: 24px;
+            }
+            nav {
+                padding: 0 20px;
+            }
+            .nav-links {
+                display: none;
+            }
+            .nav-toggle {
+                display: flex;
+            }
+        }
+
+        /* ── iPad portrait / tablets ── */
+        @media (max-width: 900px) {
+            .hero {
+                grid-template-columns: 1fr;
+            }
+            .hero-desc {
+                max-width: 100%;
+            }
+            .files-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .features-row {
+                grid-template-columns: 1fr 1fr;
+            }
+            .footer-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            nav {
+                padding: 0 16px;
+            }
+            .chat-sidebar {
+                width: 260px;
+            }
+            .ai-chat-box {
+                width: 320px;
+                max-height: 420px;
+            }
+        }
+
+        /* ── Mobile phones ── */
+        @media (max-width: 600px) {
+            .hero {
+                padding: 100px 16px 60px;
+            }
+            .hero-stats {
+                flex-wrap: wrap;
+                gap: 20px;
+            }
+            .prog-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .files-grid {
+                grid-template-columns: 1fr;
+            }
+            .features-row {
+                grid-template-columns: 1fr;
+                padding: 0 16px 60px;
+            }
+            .programmers-section,
+            .files-section {
+                padding-left: 16px;
+                padding-right: 16px;
+            }
+            .footer-grid {
+                grid-template-columns: 1fr;
+            }
+            .section-header-row {
+                margin-bottom: 20px;
+            }
+            .chat-layout {
+                flex-direction: column;
+                height: calc(100vh - 64px);
+                overflow: hidden;
+                position: relative;
+            }
+            .chat-sidebar {
+                width: 100%;
+                height: 100%;
+                border-left: none;
+            }
+            .chat-sidebar .contact-list {
+                display: block;
+                padding: 8px 0;
+            }
+            .chat-sidebar .contact-item {
+                flex-direction: row;
+                min-width: auto;
+                text-align: right;
+                gap: 12px;
+                padding: 14px 16px;
+            }
+            .chat-sidebar .contact-info .contact-role,
+            .chat-sidebar .contact-info .contact-preview {
+                display: block;
+            }
+            .chat-sidebar .contact-meta {
+                display: block;
+            }
+            .chat-main {
+                display: none;
+                flex: 1;
+            }
+            #page-chat.chat-open .chat-sidebar {
+                display: none;
+            }
+            #page-chat.chat-open .chat-main {
+                display: flex;
+            }
+            .chat-back-btn {
+                display: flex !important;
+            }
+            .chat-header {
+                padding: 8px 12px;
+                gap: 10px;
+            }
+            .chat-header-left {
+                gap: 10px;
+            }
+            .chat-back-btn {
+                width: 30px;
+                height: 30px;
+                background: transparent;
+                border: none;
+                font-size: 20px;
+            }
+            .chat-header-info h3 {
+                font-size: 14.5px;
+            }
+            .chat-header-info p {
+                font-size: 11px;
+            }
+            .chat-header-actions .icon-btn {
+                width: 32px;
+                height: 32px;
+                font-size: 14px;
+            }
+            .contact-avatar {
+                border-radius: 50% !important;
+            }
+            .messages-area {
+                padding: 10px 8px;
+                gap: 2px;
+                background:
+                    radial-gradient(circle at 20% 30%, rgba(201,162,39,0.03) 0%, transparent 50%),
+                    radial-gradient(circle at 80% 70%, rgba(0,212,255,0.03) 0%, transparent 50%);
+            }
+            .msg {
+                max-width: 82%;
+                gap: 0;
+                margin-bottom: 4px;
+            }
+            .msg-avatar {
+                display: none;
+            }
+            .msg-bubble {
+                padding: 7px 9px 8px;
+                border-radius: 9px;
+                font-size: 14.2px;
+                line-height: 1.4;
+                max-width: 100%;
+            }
+            .msg.sent .msg-bubble {
+                border-radius: 9px 2px 9px 9px;
+            }
+            .msg.recv .msg-bubble {
+                border-radius: 2px 9px 9px 9px;
+            }
+            .msg-time {
+                font-size: 10px;
+                margin-top: 2px;
+            }
+            .day-divider {
+                font-size: 10px;
+                margin: 6px 0 2px;
+            }
+            .chat-input-area {
+                padding: 8px 10px;
+                gap: 8px;
+                align-items: center;
+            }
+            .chat-input-area .icon-btn {
+                width: 36px;
+                height: 36px;
+                border-radius: 50%;
+                background: transparent;
+                border: none;
+                font-size: 20px;
+            }
+            .chat-input-box {
+                border-radius: 20px;
+                padding: 10px 16px;
+                font-size: 14.5px;
+                min-height: 40px;
+            }
+            .send-btn {
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                font-size: 16px;
+            }
+            .ai-chat-box {
+                width: 290px;
+                max-height: 380px;
+                left: 12px;
+                right: 12px;
+            }
+            .ai-chat-widget {
+                left: 12px;
+                bottom: 76px;
+            }
+            .ai-chat-toggle {
+                width: 52px;
+                height: 52px;
+                font-size: 22px;
+            }
+            .nav-right {
+                gap: 6px;
+            }
+            .nav-right .btn {
+                padding: 7px 10px;
+                font-size: 12px;
+                gap: 4px;
+            }
+            .avatar-btn {
+                width: 32px;
+                height: 32px;
+            }
+            .nav-toggle {
+                width: 34px;
+                height: 34px;
+                font-size: 16px;
+            }
+            .modal-overlay,
+            .center-page {
+                padding: 16px;
+            }
+            .form-page-body,
+            .auth-card-body {
+                padding: 24px 18px 22px;
+            }
+        }
+
+        /* ── Small phones ── */
+        @media (max-width: 380px) {
+            .prog-grid {
+                grid-template-columns: 1fr;
+            }
+            .hero h1 {
+                font-size: 32px;
+            }
+            .logo-text {
+                font-size: 15px;
+            }
+            .logo-icon {
+                width: 32px;
+                height: 32px;
+            }
+            nav {
+                padding: 0 12px;
+                height: 58px;
+            }
+            .mobile-nav-menu {
+                top: 58px;
+            }
+            .nav-right {
+                gap: 4px;
+            }
+            .nav-right .btn span,
+            .nav-right .btn {
+                font-size: 11px;
+                padding: 6px 8px;
+            }
+            .avatar-btn {
+                width: 28px;
+                height: 28px;
+                font-size: 10px;
+            }
+            .nav-toggle {
+                width: 30px;
+                height: 30px;
+                font-size: 15px;
+            }
+        }
+
+        /* ═══════════════════════════════════════════════════════════
+           AUTH / LOGIN PAGE
+           ═══════════════════════════════════════════════════════════ */
+        .auth-page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            padding: 24px;
+        }
+        .auth-page::before,
+        .auth-page::after {
+            content: '';
+            position: absolute;
+            width: 380px;
+            height: 380px;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.18;
+            z-index: 0;
+        }
+        .auth-page::before {
+            background: var(--gold);
+            top: -80px;
+            left: -100px;
+        }
+        .auth-page::after {
+            background: var(--cyan);
+            bottom: -100px;
+            right: -100px;
+        }
+        .auth-card {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 380px;
+            background: var(--surface);
+            border: 1px solid var(--border2);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 30px 70px rgba(0, 0, 0, 0.55);
+        }
+        .auth-card-top {
+            height: 4px;
+            background: linear-gradient(90deg, var(--cyan), var(--gold));
+        }
+        .auth-card-body {
+            padding: 30px 28px 28px;
+        }
+        .auth-logo {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--white);
+            margin-bottom: 18px;
+        }
+        .auth-logo span { color: var(--gold); }
+        .auth-title {
+            font-size: 24px;
+            font-weight: 900;
+            color: var(--white);
+            margin-bottom: 6px;
+        }
+        .auth-sub {
+            font-size: 13px;
+            color: var(--muted);
+            margin-bottom: 24px;
+        }
+        .field {
+            margin-bottom: 16px;
+        }
+        .field label {
+            display: block;
+            font-size: 13px;
+            color: var(--muted);
+            margin-bottom: 7px;
+        }
+        .field input,
+        .field select,
+        .field textarea {
+            width: 100%;
+            padding: 13px 16px;
+            border-radius: 10px;
+            border: 1px solid var(--border2);
+            background: var(--surface2);
+            color: var(--white);
+            font-family: var(--font);
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .field textarea {
+            resize: vertical;
+            min-height: 90px;
+        }
+        .field input::placeholder,
+        .field textarea::placeholder { color: var(--muted2); }
+        .field input:focus,
+        .field select:focus,
+        .field textarea:focus {
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(201, 162, 39, 0.15);
+        }
+        .auth-divider {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 18px 0;
+            color: var(--muted2);
+            font-size: 12px;
+        }
+        .auth-divider::before,
+        .auth-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border2);
+        }
+        .btn-block { width: 100%; justify-content: center; }
+        .btn:disabled {
+            opacity: 0.45;
+            cursor: not-allowed;
+            filter: grayscale(0.3);
+        }
+        .btn:disabled:hover {
+            transform: none;
+            box-shadow: none;
+        }
+
+        .terms-check {
+            margin-bottom: 18px;
+        }
+        .terms-check label {
+            display: flex;
+            align-items: flex-start;
+            gap: 9px;
+            font-size: 13px;
+            color: var(--muted);
+            line-height: 1.7;
+            cursor: pointer;
+        }
+        .terms-check input[type="checkbox"] {
+            width: 17px;
+            height: 17px;
+            margin-top: 2px;
+            flex-shrink: 0;
+            accent-color: var(--gold);
+            cursor: pointer;
+        }
+        .terms-check a {
+            color: var(--gold);
+            text-decoration: underline;
+            text-underline-offset: 2px;
+        }
+        .terms-check a:hover {
+            color: var(--gold2);
+        }
+
+        .google-btn-wrap {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 4px;
+            min-height: 44px;
+            transition: opacity 0.2s;
+        }
+        .google-btn-wrap.disabled {
+            opacity: 0.4;
+            pointer-events: none;
+            filter: grayscale(0.4);
+        }
+
+        /* ═══════════════════════════════════════════════════════════
+           LOCK / DEVELOP / SELL PAGES
+           ═══════════════════════════════════════════════════════════ */
+        .center-page {
+            min-height: calc(100vh - 64px);
+            margin-top: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 24px;
+        }
+        .lock-box {
+            text-align: center;
+            max-width: 420px;
+        }
+        .lock-icon {
+            width: 76px;
+            height: 76px;
+            margin: 0 auto 24px;
+            border-radius: 20px;
+            background: rgba(201, 162, 39, 0.12);
+            border: 1px solid rgba(201, 162, 39, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+        }
+        .lock-title {
+            font-size: 26px;
+            font-weight: 900;
+            color: var(--white);
+            margin-bottom: 10px;
+        }
+        .lock-sub {
+            font-size: 14px;
+            color: var(--muted);
+            line-height: 1.8;
+            margin-bottom: 28px;
+        }
+
+        .form-page-card {
+            width: 100%;
+            max-width: 560px;
+            background: var(--surface);
+            border: 1px solid var(--border2);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 30px 70px rgba(0, 0, 0, 0.5);
+        }
+        .form-page-top {
+            height: 4px;
+            background: linear-gradient(90deg, var(--cyan), var(--gold));
+        }
+        .form-page-body {
+            padding: 32px 32px 28px;
+        }
+        .form-page-body h2 {
+            font-size: 22px;
+            font-weight: 900;
+            color: var(--white);
+            margin-bottom: 6px;
+        }
+        .form-page-body > p {
+            font-size: 13px;
+            color: var(--muted);
+            margin-bottom: 24px;
+        }
+        .file-drop {
+            border: 1.5px dashed var(--border2);
+            border-radius: 12px;
+            background: var(--surface2);
+            height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--muted2);
+            font-size: 13px;
+            margin-bottom: 10px;
+            overflow: hidden;
+            cursor: pointer;
+            position: relative;
+        }
+        .file-drop img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .field-row2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+        @media (max-width: 500px) {
+            .field-row2 { grid-template-columns: 1fr; }
+        }
+
+        /* ═══════════════════════════════════════════════════════════
+           INVOICE MODAL
+           ═══════════════════════════════════════════════════════════ */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.72);
+            backdrop-filter: blur(5px);
+            z-index: 3000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .modal-overlay.open { display: flex; }
+        .invoice-card {
+            width: 100%;
+            max-width: 420px;
+            background: var(--surface);
+            border: 1px solid var(--border2);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+        }
+        .invoice-header {
+            background: linear-gradient(135deg, var(--gold), var(--gold2));
+            color: #0d0d0d;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-weight: 700;
+            font-size: 15px;
+        }
+        .invoice-close {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            background: rgba(0, 0, 0, 0.15);
+            border: none;
+            color: #0d0d0d;
+            cursor: pointer;
+            font-size: 15px;
+        }
+        .invoice-body { padding: 18px 22px 4px; }
+        .invoice-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 13px;
+        }
+        .invoice-row span:first-child { color: var(--muted); }
+        .invoice-row span:last-child { color: var(--white); font-weight: 600; }
+        .invoice-total {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 0 6px;
+        }
+        .invoice-total span:first-child { color: var(--muted); font-size: 13px; }
+        .invoice-total span:last-child { color: var(--gold); font-weight: 900; font-size: 22px; }
+        .invoice-footer { padding: 16px 22px 22px; }
+    </style>
+</head>
+<body>
+
+    <!-- ═══════════════════════════════════════════════════════════
+    BG WATERMARK
+    ═══════════════════════════════════════════════════════════ -->
+    <div class="bg-watermark">
+        <div class="bg-watermark-text">سوق المبرمجين &nbsp;&nbsp; YT SOUQ &nbsp;&nbsp; مبرمج سعودي &nbsp;&nbsp; كود نظيف &nbsp;&nbsp; ملف للبيع &nbsp;&nbsp; سوق المبرمجين &nbsp;&nbsp; YT SOUQ &nbsp;&nbsp; مبرمج سعودي &nbsp;&nbsp; كود نظيف &nbsp;&nbsp; ملف للبيع &nbsp;&nbsp; سوق المبرمجين &nbsp;&nbsp; YT SOUQ &nbsp;&nbsp; مبرمج سعودي &nbsp;&nbsp; كود نظيف &nbsp;&nbsp; ملف للبيع</div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════
+    NAV
+    ═══════════════════════════════════════════════════════════ -->
+    <nav id="mainNav">
+        <div class="nav-logo" onclick="showPage('home')">
+            <div class="logo-icon">
+                <img src="https://raw.githubusercontent.com/yazoon19921987-lang/ytsouq/main/شعاري.jpeg" alt="YT Souq Logo" style="width:100%;height:100%;object-fit:contain;" />
+            </div>
+            <span class="logo-text">YT <span>Souq</span></span>
+        </div>
+
+        <ul class="nav-links">
+            <li><a href="#" onclick="showPage('home')">الرئيسية</a></li>
+            <li><a href="#" onclick="showPage('home')">استكشف</a></li>
+            <li><a href="#" onclick="showPage('home')">المبرمجون</a></li>
+            <li><a href="#" onclick="handleSellClick()">بع ملفك</a></li>
+        </ul>
+
+        <div class="nav-right">
+            <button class="btn btn-gold" onclick="handleSellClick()">بع ملفاتك</button>
+            <button class="btn btn-ghost" onclick="showPage('chat')">💬 الشات</button>
+            <button class="avatar-btn" id="navAvatarBtn">A</button>
+            <button class="nav-toggle" id="navToggle" onclick="toggleMobileNav()" aria-label="القائمة">☰</button>
+        </div>
+    </nav>
+
+    <div class="mobile-nav-menu" id="mobileNavMenu">
+        <a href="#" onclick="showPage('home'); closeMobileNav();">الرئيسية</a>
+        <a href="#" onclick="showPage('home'); closeMobileNav();">استكشف</a>
+        <a href="#" onclick="showPage('home'); closeMobileNav();">المبرمجون</a>
+        <a href="#" onclick="handleSellClick(); closeMobileNav();">بع ملفك</a>
+        <div class="mobile-nav-actions">
+            <button class="btn btn-gold" onclick="handleSellClick(); closeMobileNav();">بع ملفاتك</button>
+            <button class="btn btn-ghost" onclick="showPage('chat'); closeMobileNav();">💬 الشات</button>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════
+    PAGE: HOME
+    ═══════════════════════════════════════════════════════════ -->
+    <div id="page-home" class="page">
+
+        <!-- ─── HERO ─── -->
+        <section class="hero">
+            <div>
+                <div class="hero-badge">منصة المبرمجين السعودية · إصدار تجريبي</div>
+                <h1>سوق <span class="accent-gold">المبرمجين</span>،<br />حيث يُباع <span class="accent-cyan">كل سطر</span> بقيمته.</h1>
+                <p class="hero-desc">منصة عربية حديثة تجمع المبرمجين السعوديين والعرب تحت سقف واحد لبيع وشراء القوالب، المكتبات، والمكوّنات الجاهزة. تصميم عصري بنكهة محلية.</p>
+                <div class="hero-actions">
+                    <button class="btn btn-gold" onclick="showPage('chat')">💬 تواصل مع مبرمج</button>
+                    <button class="btn btn-ghost">📂 تصفح الملفات</button>
+                </div>
+                <div class="hero-stats">
+                    <div>
+                        <div class="stat-val">4.9<span>/5</span></div>
+                        <div class="stat-lbl">تقييم المشترين</div>
+                    </div>
+                    <div>
+                        <div class="stat-val">680</div>
+                        <div class="stat-lbl">مبرمج فاعل</div>
+                    </div>
+                    <div>
+                        <div class="stat-val">+2.4<span>K</span></div>
+                        <div class="stat-lbl">ملف مُرخص</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Terminal Card -->
+            <div class="terminal-card">
+                <div class="terminal-bar">
+                    <div class="terminal-dots">
+                        <div class="dot dot-r"></div>
+                        <div class="dot dot-y"></div>
+                        <div class="dot dot-g"></div>
+                    </div>
+                    <div class="terminal-title">YT-SOUQ // welcome</div>
+                    <div style="width:48px;"></div>
+                </div>
+                <div class="terminal-body" style="padding:20px !important;">
+
+                    <div class="terminal-header" style="display:flex !important;align-items:center !important;gap:14px !important;margin-bottom:16px !important;background:transparent !important;padding:0 !important;border:none !important;">
+
+                        <div class="terminal-logo-box" style="background:transparent !important;padding:0 !important;overflow:hidden !important;width:52px !important;height:52px !important;flex-shrink:0 !important;margin:0 !important;display:block !important;border:none !important;">
+                            <img src="https://raw.githubusercontent.com/yazoon19921987-lang/ytsouq/main/شعاري.jpeg" alt="YT Logo" style="width:100% !important;height:100% !important;object-fit:cover !important;border-radius:6px !important;display:block !important;" />
+                        </div>
+
+                        <div style="display:flex !important;flex-direction:column !important;gap:2px !important;margin:0 !important;padding:0 !important;align-items:flex-start !important;text-align:right !important;">
+                            <div style="font-size:22px !important;font-weight:700 !important;color:var(--white) !important;line-height:1.2 !important;margin:0 !important;padding:0 !important;">أهلاً بك في YT Souq 👋</div>
+                            <div style="font-size:13px !important;color:var(--muted) !important;margin:0 !important;padding:0 !important;">
+                                سوق المبرمجين السعودي · مرحبًا <span style="color:var(--gold) !important;font-family:var(--mono) !important;font-size:11px !important;margin-right:6px !important;">v1.0</span>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="terminal-line"><span class="t-prompt">$</span> <span class="t-cmd">souq --init</span></div>
+                    <div class="terminal-line"><span class="t-ok">✓</span> تم تحميل <span class="t-val">2,431</span> سلعًا برمجية</div>
+                    <div class="terminal-line"><span class="t-ok">✓</span> <span class="t-val">680</span> مبرمجًا جاهزًا</div>
+                    <div class="terminal-line"><span class="t-ok">✓</span> البنية جاهزة · ابدأ الآن</div>
+                    <div class="terminal-line"><span class="t-prompt">$</span> <span class="t-blink">█</span></div>
+
+                    <div class="terminal-footer">
+                        <span>YT-SOUQ // 2026</span>
+                        <span>سوق للمبرمجين · سعودي</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ─── FEATURES ROW ─── -->
+        <div class="features-row">
+            <div class="feat-card">
+                <div class="feat-icon gold">🔍</div>
+                <div>
+                    <h3>ملفات مراجعة</h3>
+                    <p>جودة مضمونة قبل النشر — كل ملف يمر بمراجعة فنية قبل إتاحته للشراء.</p>
+                </div>
+            </div>
+            <div class="feat-card">
+                <div class="feat-icon cyan">⚡</div>
+                <div>
+                    <h3>تسليم فوري</h3>
+                    <p>رابط التنزيل متاح لحظة الشراء — لا انتظار، لا وسيط، لا عوائق.</p>
+                </div>
+            </div>
+            <div class="feat-card">
+                <div class="feat-icon green">🛡️</div>
+                <div>
+                    <h3>معاملات موثّقة</h3>
+                    <p>حماية كاملة للبائع والمشتري — سجل المعاملات محفوظ وشفاف.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ─── PROGRAMMERS ─── -->
+        <section class="programmers-section">
+            <div class="section-header-row">
+                <div>
+                    <div class="section-eyebrow">SELLERS // أبرز المبرمجين</div>
+                    <div class="section-title">بطاقات <span class="accent-gold">المبرمجين</span></div>
+                    <div class="section-sub">اختر مبرمجك المفضل · بطاقة لكل عضو في السوق</div>
+                </div>
+                <button class="btn btn-ghost">عرض الكل ←</button>
+            </div>
+
+            <div class="prog-grid">
+                <!-- Card 1 -->
+                <div class="prog-card" onclick="openChat('ابو شوقي', 'Full-Stack Engineer', 'YT')">
+                    <div class="prog-card-header gold-grad">
+                        <div class="prog-badge hot">⭐ الأكثر مبيعًا</div>
+                        <div class="prog-avatar">YT</div>
+                    </div>
+                    <div class="prog-card-body">
+                        <div class="prog-name">ابو شوقي</div>
+                        <div class="prog-handle">abushoqi.codes@</div>
+                        <div class="prog-role">Full-Stack Engineer</div>
+                        <div class="prog-meta">
+                            <span>🏙️ الرياض</span>
+                            <span>⏱️ 7 سنوات خبرة</span>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;align-items:center;">
+                            <div class="prog-rating">⭐ 4.9 <span style="color:var(--muted2);font-size:10px;">(1294)</span></div>
+                            <div class="prog-sales" style="color:var(--muted2);font-size:11px;">1294 عملية بيع</div>
+                        </div>
+                    </div>
+                    <div class="prog-card-footer">
+                        <button class="view-btn" onclick="openChat('ياسر التميمي','Full-Stack Engineer','YT'); event.stopPropagation()">💬 راسله الآن</button>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="prog-card" onclick="openChat('لي أن السبيعي', 'Frontend · Motion Designer', 'LS')">
+                    <div class="prog-card-header cyan-grad">
+                        <div class="prog-badge hot">⭐ الأكثر مبيعًا</div>
+                        <div class="prog-avatar" style="background:linear-gradient(135deg,var(--cyan2),var(--cyan))">LS</div>
+                    </div>
+                    <div class="prog-card-body">
+                        <div class="prog-name">ليان السبيعي</div>
+                        <div class="prog-handle" style="color:var(--cyan);">layan.dev@</div>
+                        <div class="prog-role">Frontend · Motion Designer</div>
+                        <div class="prog-meta">
+                            <span>🏙️ الرياض</span>
+                            <span>⏱️ 6 سنوات خبرة</span>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;align-items:center;">
+                            <div class="prog-rating">⭐ 5 <span style="color:var(--muted2);font-size:10px;">(1530)</span></div>
+                            <div class="prog-sales">1530 عملية بيع</div>
+                        </div>
+                    </div>
+                    <div class="prog-card-footer">
+                        <button class="view-btn" onclick="openChat('ليان السبيعي','Frontend · Motion Designer','LS'); event.stopPropagation()">💬 راسله الآن</button>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="prog-card" onclick="openChat('خالد الزهراني', 'ML · Computer Vision', 'KZ')">
+                    <div class="prog-card-header teal-grad">
+                        <div class="prog-badge new" style="background:rgba(0,212,255,0.2);color:var(--cyan);">جديد</div>
+                        <div class="prog-avatar" style="background:linear-gradient(135deg,#004455,var(--cyan2))">KZ</div>
+                    </div>
+                    <div class="prog-card-body">
+                        <div class="prog-name">خالد الزهراني</div>
+                        <div class="prog-handle" style="color:var(--cyan);">kz.dev@</div>
+                        <div class="prog-role">ML · Computer Vision</div>
+                        <div class="prog-meta">
+                            <span>🏙️ الدمام</span>
+                            <span>⏱️ 4 سنوات خبرة</span>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;align-items:center;">
+                            <div class="prog-rating">⭐ 4.7 <span style="color:var(--muted2);font-size:10px;">(612)</span></div>
+                            <div class="prog-sales">612 عملية بيع</div>
+                        </div>
+                    </div>
+                    <div class="prog-card-footer">
+                        <button class="view-btn" onclick="openChat('خالد الزهراني','ML · Computer Vision','KZ'); event.stopPropagation()">💬 راسله الآن</button>
+                    </div>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="prog-card" onclick="openChat('نورة المطيري', 'iOS · Swift Architect', 'NM')">
+                    <div class="prog-card-header dark-grad">
+                        <div class="prog-badge" style="background:rgba(34,197,94,0.2);color:var(--green);">تعديف</div>
+                        <div class="prog-avatar" style="background:linear-gradient(135deg,#16a34a,#22c55e)">NM</div>
+                    </div>
+                    <div class="prog-card-body">
+                        <div class="prog-name">نورة المطيري</div>
+                        <div class="prog-handle" style="color:var(--green);">nouracodes@</div>
+                        <div class="prog-role">iOS · Swift Architect</div>
+                        <div class="prog-meta">
+                            <span>🏙️ جدة</span>
+                            <span>⏱️ 5 سنوات خبرة</span>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;align-items:center;">
+                            <div class="prog-rating">⭐ 4.8 <span style="color:var(--muted2);font-size:10px;">(892)</span></div>
+                            <div class="prog-sales">892 عملية بيع</div>
+                        </div>
+                    </div>
+                    <div class="prog-card-footer">
+                        <button class="view-btn" onclick="openChat('نورة المطيري','iOS · Swift Architect','NM'); event.stopPropagation()">💬 راسلها الآن</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ─── FILES SECTION ─── -->
+        <section class="files-section">
+            <div class="section-header-row">
+                <div>
+                    <div class="section-eyebrow">FILES // معرض السلفات</div>
+                    <div class="section-title">ملفات <span class="accent-gold">للبيع</span></div>
+                    <div class="section-sub">صور من ملفات حقيقية مع المصدر · مقاطع كود معاينة</div>
+                </div>
+            </div>
+
+            <div class="filter-tabs">
+                <button class="filter-tab active" onclick="filterFiles(this,'all')">كل الفئات</button>
+                <button class="filter-tab" onclick="filterFiles(this,'web')">ويب</button>
+                <button class="filter-tab" onclick="filterFiles(this,'mobile')">تطبيقات</button>
+                <button class="filter-tab" onclick="filterFiles(this,'ai')">ذكاء اصطناعي</button>
+                <button class="filter-tab" onclick="filterFiles(this,'ui')">واجهات</button>
+                <button class="filter-tab" onclick="filterFiles(this,'bot')">بوتات</button>
+                <button class="filter-tab" onclick="filterFiles(this,'design')">تصميم</button>
+            </div>
+
+            <div class="files-grid">
+                <!-- File 1 -->
+                <div class="file-card" data-cat="ai">
+                    <div class="file-preview">
+                        <div class="file-lang">Python · AI</div>
+                        <div class="file-dot green"></div>
+                        <span class="kw">model</span> = YOLO(<span class="str">"yolov8n.pt"</span>)<br />
+                        <span class="kw">results</span> = model(frame, conf=<span class="fn">0.45</span>)<br />
+                        <span class="kw">for</span> box <span class="kw">in</span> results[<span class="fn">0</span>].boxes:<br />
+                        &nbsp;&nbsp;draw_label(frame, box, <span class="str">"DEFECT"</span>)<br />
+                        <span class="cm"># كشف العيوب في خط الإنتاج</span>
+                    </div>
+                    <div class="file-body">
+                        <div class="file-title">نموذج رؤية حاسوبية: كشف العيوب</div>
+                        <div class="file-tags">
+                            <span class="file-tag">OpenCV</span>
+                            <span class="file-tag">YOLO</span>
+                            <span class="file-tag">PyTorch</span>
+                        </div>
+                        <div class="file-meta">
+                            <div class="file-seller">
+                                <div class="file-seller-avatar">KZ</div>
+                                kz.dev@
+                            </div>
+                            <div>⭐ 4.7 (76) · ⬇️ 228</div>
+                        </div>
+                    </div>
+                    <div class="file-price-row">
+                        <div>
+                            <span class="file-price-old">350 ر.س</span>
+                            <span class="file-price">249 <small>ر.س</small></span>
+                        </div>
+                        <button class="buy-btn" onclick="openInvoice(this)">دفع الآن</button>
+                    </div>
+                </div>
+
+                <!-- File 2 -->
+                <div class="file-card" data-cat="mobile">
+                    <div class="file-preview">
+                        <div class="file-lang">JSX · Mobile</div>
+                        <div class="file-dot yellow"></div>
+                        <span class="kw">function</span> <span class="fn">Driver</span>({ order }) {<br />
+                        &nbsp;&nbsp;<span class="kw">const</span> live = useLocation(order.id)<br />
+                        &nbsp;&nbsp;<span class="kw">return</span> (<br />
+                        &nbsp;&nbsp;&lt;<span class="fn">Map</span> center={live.coords}&gt;<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;&lt;<span class="fn">Pin</span> user={order.user}/&gt;<br />
+                        &nbsp;&nbsp;&lt;/<span class="fn">Map</span>&gt;)
+                    </div>
+                    <div class="file-body">
+                        <div class="file-title">تطبيق توصيل طلبات: React Native + Maps</div>
+                        <div class="file-tags">
+                            <span class="file-tag">Firebase</span>
+                            <span class="file-tag">Maps</span>
+                            <span class="file-tag">React Native</span>
+                        </div>
+                        <div class="file-meta">
+                            <div class="file-seller">
+                                <div class="file-seller-avatar" style="background:linear-gradient(135deg,var(--gold),var(--gold2))">YT</div>
+                                yasser.codes@
+                            </div>
+                            <div>⭐ 4.9 · ⬇️ 512</div>
+                        </div>
+                    </div>
+                    <div class="file-price-row">
+                        <div>
+                            <span class="file-price">199 <small>ر.س</small></span>
+                        </div>
+                        <button class="buy-btn" onclick="openInvoice(this)">دفع الآن</button>
+                    </div>
+                </div>
+
+                <!-- File 3 -->
+                <div class="file-card" data-cat="web">
+                    <div class="file-preview">
+                        <div class="file-lang">TS · Next.js</div>
+                        <div class="file-dot green"></div>
+                        <span class="kw">export const</span> <span class="fn">checkout</span> = <span class="kw">async</span> (cart) => {<br />
+                        &nbsp;&nbsp;<span class="kw">const</span> session = <span class="kw">await</span> stripe.create({<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;items: cart.map(toLineItem),<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="str">"mode"</span>: <span class="str">"payment"</span>,<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;...<br />
+                        &nbsp;&nbsp;})<br />
+                        &nbsp;&nbsp;<span class="kw">return</span> session.url
+                    </div>
+                    <div class="file-body">
+                        <div class="file-title">نظام متجر إلكتروني كامل: Next.js + Stripe</div>
+                        <div class="file-tags">
+                            <span class="file-tag">Prisma</span>
+                            <span class="file-tag">Tailwind</span>
+                            <span class="file-tag">Stripe</span>
+                            <span class="file-tag">Next.js</span>
+                        </div>
+                        <div class="file-meta">
+                            <div class="file-seller">
+                                <div class="file-seller-avatar" style="background:linear-gradient(135deg,var(--cyan2),var(--cyan))">LS</div>
+                                layan.dev@
+                            </div>
+                            <div>⭐ 5 (412) · ⬇️ 1236</div>
+                        </div>
+                    </div>
+                    <div class="file-price-row">
+                        <div>
+                            <span class="file-price-old">299 ر.س</span>
+                            <span class="file-price">199 <small>ر.س</small></span>
+                        </div>
+                        <button class="buy-btn" onclick="openInvoice(this)">دفع الآن</button>
+                    </div>
+                </div>
+
+                <!-- File 4 -->
+                <div class="file-card" data-cat="design">
+                    <div class="file-preview">
+                        <div class="file-lang">Figma · Design</div>
+                        <div class="file-dot green"></div>
+                        <span class="cm">// مكتبة هوية بصرية كاملة</span><br />
+                        <span class="kw">colors</span>: { primary: <span class="str">"#c9a227"</span>, ... }<br />
+                        <span class="kw">typography</span>: Cairo / IBM Plex<br />
+                        <span class="kw">components</span>: <span class="fn">480</span> مكوّن<br />
+                        <span class="kw">tokens</span>: <span class="fn">120</span> متغير CSS
+                    </div>
+                    <div class="file-body">
+                        <div class="file-title">مكتبة هوية بصرية: Figma + Tokens</div>
+                        <div class="file-tags">
+                            <span class="file-tag">Style Dictionary</span>
+                            <span class="file-tag">Figma</span>
+                        </div>
+                        <div class="file-meta">
+                            <div class="file-seller">
+                                <div class="file-seller-avatar" style="background:linear-gradient(135deg,var(--cyan2),var(--cyan))">LS</div>
+                                layan.dev@
+                            </div>
+                            <div>⭐ 4.9 (187) · ⬇️ 561</div>
+                        </div>
+                    </div>
+                    <div class="file-price-row">
+                        <div>
+                            <span class="file-price">89 <small>ر.س</small></span>
+                        </div>
+                        <button class="buy-btn" onclick="openInvoice(this)">دفع الآن</button>
+                    </div>
+                </div>
+
+                <!-- File 5 -->
+                <div class="file-card" data-cat="bot">
+                    <div class="file-preview">
+                        <div class="file-lang">Node.js · Bot</div>
+                        <div class="file-dot green"></div>
+                        <span class="kw">const</span> bot = <span class="kw">new</span> <span class="fn">Telegraf</span>(token)<br />
+                        bot.<span class="fn">command</span>(<span class="str">'start'</span>, ctx => {<br />
+                        &nbsp;&nbsp;<span class="kw">const</span> userId = ctx.from.id<br />
+                        &nbsp;&nbsp;db.<span class="fn">groups</span>.upsert({ userId })<br />
+                        &nbsp;&nbsp;ctx.<span class="fn">reply</span>(<span class="str">'أهلًا! 👋'</span>)<br />
+                        })
+                    </div>
+                    <div class="file-body">
+                        <div class="file-title">بوت تيليجرام: إدارة مجتمعات</div>
+                        <div class="file-tags">
+                            <span class="file-tag">Redis</span>
+                            <span class="file-tag">Telegraf</span>
+                            <span class="file-tag">Node.js</span>
+                        </div>
+                        <div class="file-meta">
+                            <div class="file-seller">
+                                <div class="file-seller-avatar" style="background:linear-gradient(135deg,var(--gold),var(--gold2))">YT</div>
+                                yasser.codes@
+                            </div>
+                            <div>⭐ 4.6 (58) · ⬇️ 174</div>
+                        </div>
+                    </div>
+                    <div class="file-price-row">
+                        <div>
+                            <span class="file-price">149 <small>ر.س</small></span>
+                        </div>
+                        <button class="buy-btn" onclick="openInvoice(this)">دفع الآن</button>
+                    </div>
+                </div>
+
+                <!-- File 6 -->
+                <div class="file-card" data-cat="ui">
+                    <div class="file-preview">
+                        <div class="file-lang">React · SaaS</div>
+                        <div class="file-dot green"></div>
+                        <span class="kw">import</span> { <span class="fn">LineChart</span>, <span class="fn">KpiCard</span> }<br />
+                        &nbsp;&nbsp;<span class="kw">from</span> <span class="str">'@yt-ui/charts'</span><br />
+                        &lt;<span class="fn">Dashboard</span>&gt;<br />
+                        &nbsp;&nbsp;&lt;<span class="fn">KpiCard</span> title=<span class="str">"المبيعات"</span>/&gt;<br />
+                        &nbsp;&nbsp;&lt;<span class="fn">LineChart</span> data={sales} <br />
+                        &nbsp;&nbsp;&nbsp;animate motion/&gt;<br />
+                        &lt;/<span class="fn">Dashboard</span>&gt;
+                    </div>
+                    <div class="file-body">
+                        <div class="file-title">لوحة تحكم تقنيات SaaS: Motion + Charts</div>
+                        <div class="file-tags">
+                            <span class="file-tag">Recharts</span>
+                            <span class="file-tag">Motion</span>
+                            <span class="file-tag">React</span>
+                        </div>
+                        <div class="file-meta">
+                            <div class="file-seller">
+                                <div class="file-seller-avatar" style="background:linear-gradient(135deg,var(--cyan2),var(--cyan))">LS</div>
+                                layan.dev@
+                            </div>
+                            <div>⭐ 5 (412) · ⬇️ 1236</div>
+                        </div>
+                    </div>
+                    <div class="file-price-row">
+                        <div>
+                            <span class="file-price-old">299 ر.س</span>
+                            <span class="file-price">199 <small>ر.س</small></span>
+                        </div>
+                        <button class="buy-btn" onclick="openInvoice(this)">دفع الآن</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ─── TICKER ─── -->
+        <div class="ticker-wrap">
+            <div class="ticker-track">
+                <span class="ticker-item"><span>●</span> Swift</span>
+                <span class="ticker-item"><span>●</span> Next.js</span>
+                <span class="ticker-item"><span>●</span> OpenSource</span>
+                <span class="ticker-item"><span>●</span> تصميم عربي</span>
+                <span class="ticker-item"><span>●</span> مبرمج</span>
+                <span class="ticker-item"><span>●</span> YT SOUQ</span>
+                <span class="ticker-item"><span>●</span> ملف للبيع</span>
+                <span class="ticker-item"><span>●</span> كود نظيف</span>
+                <span class="ticker-item"><span>●</span> سعودي</span>
+                <span class="ticker-item"><span>●</span> سوق المبرمجين</span>
+                <!-- duplicate for seamless loop -->
+                <span class="ticker-item"><span>●</span> Swift</span>
+                <span class="ticker-item"><span>●</span> Next.js</span>
+                <span class="ticker-item"><span>●</span> OpenSource</span>
+                <span class="ticker-item"><span>●</span> تصميم عربي</span>
+                <span class="ticker-item"><span>●</span> مبرمج</span>
+                <span class="ticker-item"><span>●</span> YT SOUQ</span>
+                <span class="ticker-item"><span>●</span> ملف للبيع</span>
+                <span class="ticker-item"><span>●</span> كود نظيف</span>
+                <span class="ticker-item"><span>●</span> سعودي</span>
+                <span class="ticker-item"><span>●</span> سوق المبرمجين</span>
+            </div>
+        </div>
+
+        <!-- ─── FOOTER ─── -->
+        <footer>
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+                        <div class="logo-icon">
+                            <img src="https://raw.githubusercontent.com/yazoon19921987-lang/ytsouq/main/شعاري.jpeg" alt="YT Souq Logo" style="width:100%;height:100%;object-fit:contain;" />
+                        </div>
+                        <span class="logo-text">YT <span>Souq</span></span>
+                    </div>
+                    <p>منصة عربية تجمع المبرمجين السعوديين والعرب لبيع وشراء الملفات البرمجية، القوالب، والمكوّنات الجاهزة. تصميم عصري بنكهة محلية.</p>
+                    <div style="display:flex;gap:6px;margin-top:16px;">
+                        <div style="background:var(--border2);padding:3px 10px;border-radius:4px;font-size:10px;color:var(--muted2);font-family:var(--mono);">Made in 🇸🇦</div>
+                        <div style="background:var(--border2);padding:3px 10px;border-radius:4px;font-size:10px;color:var(--muted2);font-family:var(--mono);">v1.0 · done</div>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4>EXPLORE //</h4>
+                    <a href="#">قوالب ويب</a>
+                    <a href="#">تطبيقات جوال</a>
+                    <a href="#">ذكاء اصطناعي</a>
+                    <a href="#">واجهات UI</a>
+                </div>
+                <div class="footer-col">
+                    <h4>SUPPORT //</h4>
+                    <a href="#">مركز المساعدة</a>
+                    <a href="https://docs.google.com/document/d/1WyzYUS0hqqI_nNPGbejnrs6Ox87kaBkPV77PkhhFGbk/edit?usp=sharing" target="_blank" rel="noopener noreferrer">سياسة البائعين</a>
+                    <a href="https://docs.google.com/document/d/1anwn7mKXL3JB4G4KcWU1ZBE8W7uAVhT04W0vlZV3DJU/edit?usp=sharing" target="_blank" rel="noopener noreferrer">الشروط والأحكام</a>
+                    <a href="#">تواصل معنا</a>
+                </div>
+                <div class="footer-col">
+                    <h4>COMMUNITY //</h4>
+                    <a href="#">تويتر / X</a>
+                    <a href="#">تيليجرام</a>
+                    <a href="#">لينكدإن</a>
+                    <a href="#">جيت هاب</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <span>© YT Souq 2026 · جميع الحقوق محفوظة</span>
+                <span style="font-family:var(--mono);">Made with Emergent</span>
+            </div>
+        </footer>
+
+    </div>
+    <!-- END page-home -->
+
+
+    <!-- ═══════════════════════════════════════════════════════════
+    PAGE: CHAT
+    ═══════════════════════════════════════════════════════════ -->
+    <div id="page-chat" class="page">
+        <div class="chat-layout">
+
+            <!-- Sidebar -->
+            <aside class="chat-sidebar">
+                <div class="sidebar-header">
+                    <h3>المبرمجون 💬</h3>
+                    <input type="text" class="search-input" placeholder="ابحث عن مبرمج..." id="chatSearchInput" oninput="filterContacts()" />
+                </div>
+                <div class="contact-list" id="contactList">
+                    <!-- populated by JS -->
+                </div>
+            </aside>
+
+            <!-- Main Chat -->
+            <main class="chat-main" id="chatMain">
+                <div class="chat-empty" id="chatEmpty">
+                    <div class="chat-empty-icon">💬</div>
+                    <h3>اختر مبرمجًا لتبدأ الشات</h3>
+                    <p>اضغط على أي بطاقة في القائمة لفتح المحادثة</p>
+                    <button class="btn btn-gold" onclick="showPage('home')">← تصفح المبرمجين</button>
+                </div>
+            </main>
+        </div>
+    </div>
+    <!-- END page-chat -->
+
+
+    <!-- ═══════════════════════════════════════════════════════════
+    PAGE: LOGIN
+    ═══════════════════════════════════════════════════════════ -->
+    <div id="page-login" class="page active">
+        <div class="auth-page">
+            <div class="auth-card">
+                <div class="auth-card-top"></div>
+                <div class="auth-card-body">
+                    <div class="auth-logo">YT <span>Souq</span></div>
+                    <div class="auth-title">تسجيل الدخول</div>
+                    <div class="auth-sub">سجّل دخولك للوصول إلى سوق المبرمجين</div>
+
+                    <div class="terms-check">
+                        <label>
+                            <input type="checkbox" id="agreeTerms" onchange="toggleLoginSubmit()" />
+                            <span>أوافق على الشروط والأحكام الخاصة بمنصة YT Souq. <a href="https://docs.google.com/document/d/1anwn7mKXL3JB4G4KcWU1ZBE8W7uAVhT04W0vlZV3DJU/edit?usp=sharing" target="_blank" rel="noopener noreferrer">انقر هنا</a></span>
+                        </label>
+                    </div>
+
+                    <div id="googleSignInBtn" class="google-btn-wrap disabled"></div>
+
+                    <div class="auth-divider">أو</div>
+
+                    <form onsubmit="handleLogin(event)">
+                        <div class="field">
+                            <label for="loginEmail">البريد الإلكتروني</label>
+                            <input id="loginEmail" type="email" placeholder="example@ytsouq.com" />
+                        </div>
+                        <div class="field">
+                            <label for="loginPassword">كلمة المرور</label>
+                            <input id="loginPassword" type="password" placeholder="••••••••" />
+                        </div>
+                        <button type="submit" id="loginSubmitBtn" class="btn btn-gold btn-block" disabled>تسجيل الدخول</button>
+                    </form>
+
+                    <div class="auth-divider">أو</div>
+                    <button class="btn btn-ghost btn-block" onclick="showPage('home')">الاستمرار لاحقًا</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END page-login -->
+
+
+    <!-- ═══════════════════════════════════════════════════════════
+    PAGE: ACCOUNT NOT DEVELOPED (LOCK)
+    ═══════════════════════════════════════════════════════════ -->
+    <div id="page-develop-lock" class="page">
+        <div class="center-page">
+            <div class="lock-box">
+                <div class="lock-icon">🔒</div>
+                <div class="lock-title">أنت لم تطوّر حسابك</div>
+                <div class="lock-sub">لتتمكن من بيع ملفاتك في سوق المبرمجين، تحتاج إلى تطوير حسابك أولاً، عملية سريعة وسهلة!</div>
+                <button class="btn btn-gold" style="padding:14px 32px;font-size:15px;" onclick="showPage('develop-form')">تطوير الآن</button>
+            </div>
+        </div>
+    </div>
+    <!-- END page-develop-lock -->
+
+
+    <!-- ═══════════════════════════════════════════════════════════
+    PAGE: DEVELOP ACCOUNT (SURVEY)
+    ═══════════════════════════════════════════════════════════ -->
+    <div id="page-develop-form" class="page">
+        <div class="center-page">
+            <div class="form-page-card">
+                <div class="form-page-top"></div>
+                <div class="form-page-body">
+                    <h2>تطوير الحساب</h2>
+                    <p>أدخل بياناتك لتتمكن من بيع ملفاتك في السوق</p>
+
+                    <form onsubmit="submitDevelopForm(event)">
+                        <div class="field">
+                            <label for="devName">الاسم</label>
+                            <input id="devName" type="text" placeholder="اسمك الكامل" required />
+                        </div>
+                        <div class="field-row2">
+                            <div class="field">
+                                <label for="devAge">العمر</label>
+                                <input id="devAge" type="number" min="1" placeholder="مثال: 25" required />
+                            </div>
+                            <div class="field">
+                                <label for="devIban">آيبان البنك
+                                    <a href="https://docs.google.com/document/d/1_Pab9g7XGcdiYnmcURxMbglb4Tm9yWSzT4D4wu_N9oI/edit?usp=sharing" target="_blank" rel="noopener" style="color:var(--cyan);font-size:12px;font-weight:400;margin-right:8px;text-decoration:underline;">انقر للمعرفة المزيد</a>
+                                </label>
+                                <input id="devIban" type="text" placeholder="SA00 0000 0000 0000 0000 0000" required />
+                            </div>
+                        </div>
+                        <div class="terms-check">
+                            <label>
+                                <input type="checkbox" id="agreeSellerPolicy" onchange="toggleDevelopSubmit()" />
+                                <span>موافقة على <a href="https://docs.google.com/document/d/1WyzYUS0hqqI_nNPGbejnrs6Ox87kaBkPV77PkhhFGbk/edit?usp=sharing" target="_blank" rel="noopener noreferrer">سياسات البائعين</a></span>
+                            </label>
+                        </div>
+                        <button type="submit" id="developSubmitBtn" class="btn btn-gold btn-block" style="margin-top:6px;" disabled>تطوير الآن</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END page-develop-form -->
+
+
+    <!-- ═══════════════════════════════════════════════════════════
+    PAGE: SELL YOUR FILE
+    ═══════════════════════════════════════════════════════════ -->
+    <div id="page-sell" class="page">
+        <div class="center-page">
+            <div class="form-page-card">
+                <div class="form-page-top"></div>
+                <div class="form-page-body">
+                    <h2>بع ملفك</h2>
+                    <p>أضف تفاصيل ملفك ليظهر في قائمة "ملفات للبيع"</p>
+
+                    <form onsubmit="submitSellForm(event)">
+                        <div class="field">
+                            <label>صورة الملف</label>
+                            <div class="file-drop" id="sellImageDrop" onclick="document.getElementById('sellImageInput').click()">اختر صورة للملف</div>
+                            <input id="sellImageInput" type="file" accept="image/*" onchange="previewSellImage(event)" />
+                        </div>
+                        <div class="field">
+                            <label for="sellName">اسم الملف</label>
+                            <input id="sellName" type="text" placeholder="مثال: قالب متجر React" required />
+                        </div>
+                        <div class="field">
+                            <label for="sellDesc">الوصف</label>
+                            <textarea id="sellDesc" placeholder="اشرح ما يحتويه الملف..."></textarea>
+                        </div>
+                        <div class="field">
+                            <label>ارفق الملف</label>
+                            <input id="sellFileInput" type="file" />
+                        </div>
+                        <div class="field">
+                            <label for="sellPrice">السعر (ر.س)</label>
+                            <input id="sellPrice" type="number" min="1" placeholder="مثال: 199" required />
+                        </div>
+                        <button type="submit" class="btn btn-gold btn-block" style="margin-top:6px;">نشر الملف للبيع</button>
+                        <button type="button" class="btn btn-ghost btn-block" style="margin-top:10px;" onclick="showPage('home')">إلغاء</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END page-sell -->
+
+
+    <!-- ═══════════════════════════════════════════════════════════
+    INVOICE MODAL
+    ═══════════════════════════════════════════════════════════ -->
+    <div class="modal-overlay" id="invoiceModal">
+        <div class="invoice-card">
+            <div class="invoice-header">
+                <span>🧾 فاتورة الشراء</span>
+                <button class="invoice-close" onclick="closeInvoice()">✕</button>
+            </div>
+            <div class="invoice-body">
+                <div class="invoice-row"><span>اسم الملف</span><span id="invFileName">-</span></div>
+                <div class="invoice-row"><span>نوع الملف</span><span id="invFileType">-</span></div>
+                <div class="invoice-row"><span>صاحب الملف</span><span id="invFileSeller">-</span></div>
+                <div class="invoice-row"><span>السعر</span><span id="invFilePrice">-</span></div>
+                <div class="invoice-total"><span>الإجمالي المستحق</span><span id="invFileTotal">-</span></div>
+            </div>
+            <div class="invoice-footer">
+                <button class="btn btn-gold btn-block" onclick="payNow()">💳 دفع الآن</button>
+            </div>
+        </div>
+    </div>
+    <!-- END invoice modal -->
+
+
+    <!-- ═══════════════════════════════════════════════════════════
+    AI CHAT WIDGET (on home page)
+    ═══════════════════════════════════════════════════════════ -->
+    <div class="ai-chat-widget" id="aiWidget">
+
+        <!-- The chat box -->
+        <div class="ai-chat-box" id="aiChatBox">
+            <div class="ai-chat-header">
+                <div class="ai-info">
+                    <div class="ai-avatar">🤖</div>
+                    <div>
+                        <div class="ai-name">مساعد YT Souq</div>
+                        <div class="ai-status">● متصل</div>
+                    </div>
+                </div>
+                <button class="ai-close" onclick="toggleAiChat()">✕</button>
+            </div>
+            <div class="ai-chat-messages" id="aiMessages">
+                <div class="ai-msg">
+                    <div class="ai-msg-avatar">🤖</div>
+                    <div>
+                        <div class="ai-msg-bubble">
+                            👋 أهلاً بك في YT Souq!<br />
+                            أنا مساعدك الذكي، اسألني عن:<br />
+                            • الملفات المتاحة<br />
+                            • المبرمجين<br />
+                            • كيفية الشراء
+                        </div>
+                        <div class="ai-time">الآن</div>
+                    </div>
+                </div>
+            </div>
+            <div class="ai-suggestions" id="aiSuggestions">
+                <button onclick="aiQuickAsk('أفضل مبرمج؟')">🏆 أفضل مبرمج؟</button>
+                <button onclick="aiQuickAsk('ملفات للبيع')">📂 ملفات للبيع</button>
+                <button onclick="aiQuickAsk('كيف أشتري؟')">🛒 كيف أشتري؟</button>
+                <button onclick="aiQuickAsk('سعر متوسط')">💰 سعر متوسط</button>
+            </div>
+            <div class="ai-chat-input-area">
+                <input type="text" id="aiInput" placeholder="اكتب سؤالك هنا..." onkeydown="if(event.key==='Enter'){event.preventDefault();sendAiMsg();}" />
+                <button class="ai-send-btn" onclick="sendAiMsg()">➤</button>
+            </div>
+        </div>
+
+        <!-- Toggle button -->
+        <button class="ai-chat-toggle" id="aiToggleBtn" onclick="toggleAiChat()">
+            <span class="pulse-ring"></span>
+            <span class="badge-dot"></span>
+            🤖
+        </button>
+    </div>
+
+
+    <!-- ═══════════════════════════════════════════════════════════
+    SCRIPTS
+    ═══════════════════════════════════════════════════════════ -->
+    <script>
+        /**
+         * ═══════════════════════════════════════════════════════════════
+         *  DATA
+         * ═══════════════════════════════════════════════════════════════
+         */
+        const programmers = [{
+            id: 'YT',
+            name: 'ياسر التميمي',
+            handle: 'yasser.codes@',
+            role: 'Full-Stack Engineer',
+            city: 'الرياض',
+            rating: 4.9,
+            online: true,
+            avatarClass: 'gold-av',
+            preview: 'مرحباً، كيف يمكنني مساعدتك؟',
+            time: '10:42',
+            unread: 2,
+            msgs: [
+                { from: 'them', text: 'أهلاً بك في YT Souq! 👋 أنا ياسر، Full-Stack Developer. هل تبحث عن شيء محدد?', time: '10:40' },
+                { from: 'me', text: 'أهلاً يا ياسر! رأيت ملف متجرك الإلكتروني — يبدو رائعاً.', time: '10:41' },
+                { from: 'them', text: 'شكراً! المشروع Next.js + Stripe يشمل:\n• نظام مصادقة كامل\n• لوحة تحكم للبائع\n• دعم Multi-currency',
+                    time: '10:42',
+                    code: 'const session = await stripe.checkout.sessions.create({\n  mode: "payment",\n  line_items: cartItems,\n  success_url: "/success"\n})' },
+                { from: 'me', text: 'ممتاز! هل يدعم اللغة العربية؟', time: '10:43' },
+            ]
+        }, {
+            id: 'LS',
+            name: 'ليان السبيعي',
+            handle: 'layan.dev@',
+            role: 'Frontend · Motion Designer',
+            city: 'الرياض',
+            rating: 5.0,
+            online: true,
+            avatarClass: 'cyan-av',
+            preview: 'الـ Figma library كاملة مع 480 كومبوننت',
+            time: '09:15',
+            unread: 0,
+            msgs: [
+                { from: 'them', text: 'هلا! 🎨 أنا ليان — متخصصة في Frontend و Motion Design. عندي مكتبة Figma شاملة.',
+                    time: '09:10' },
+                { from: 'me', text: 'ما شاء الله! كم عدد المكوّنات في المكتبة؟', time: '09:12' },
+                { from: 'them', text: 'المكتبة تحتوي على 480 كومبوننت، 120 CSS token، ودعم كامل لـ Dark Mode.',
+                    time: '09:14',
+                    code: ':root {\n  --color-primary: #c9a227;\n  --color-cyan: #00d4ff;\n  --radius-card: 14px;\n}' },
+            ]
+        }, {
+            id: 'KZ',
+            name: 'خالد الزهراني',
+            handle: 'kz.dev@',
+            role: 'ML · Computer Vision',
+            city: 'الدمام',
+            rating: 4.7,
+            online: false,
+            avatarClass: 'cyan-av',
+            preview: 'نموذج YOLO جاهز للإنتاج 🤖',
+            time: 'أمس',
+            unread: 0,
+            msgs: [
+                { from: 'them', text: 'مرحباً، عندي نموذج Computer Vision كامل للكشف عن العيوب في الإنتاج. يشمل YOLO + OpenCV.',
+                    time: 'أمس 14:30' },
+                { from: 'me', text: 'مثير للاهتمام، ما مستوى الدقة؟', time: 'أمس 14:35' },
+                { from: 'them', text: 'الدقة 94.7% على بيانات اختبار مع 30 FPS على GPU متوسط.', time: 'أمس 14:37' },
+            ]
+        }, {
+            id: 'NM',
+            name: 'نورة المطيري',
+            handle: 'nouracodes@',
+            role: 'iOS · Swift Architect',
+            city: 'جدة',
+            rating: 4.8,
+            online: true,
+            avatarClass: 'green-av',
+            preview: 'تطبيق iOS كامل بـ SwiftUI 🍎',
+            time: '08:00',
+            unread: 1,
+            msgs: [
+                { from: 'them', text: 'السلام عليكم! 🍎 أنا نورة، مهندسة iOS. عندي تطبيق SwiftUI كامل مع حسابات محلية.',
+                    time: '08:00' },
+            ]
+        }, ];
+
+
+        /**
+         * ═══════════════════════════════════════════════════════════════
+         *  STATE
+         * ═══════════════════════════════════════════════════════════════
+         */
+        let activeProgrammerId = null;
+        let contactFilter = '';
+
+
+        /**
+         * ═══════════════════════════════════════════════════════════════
+         *  CONTACTS – RENDER & FILTER
+         * ═══════════════════════════════════════════════════════════════
+         */
+        function renderContacts() {
+            const list = document.getElementById('contactList');
+            const filtered = programmers.filter(p =>
+                p.name.includes(contactFilter) ||
+                p.role.includes(contactFilter) ||
+                p.handle.includes(contactFilter)
+            );
+            list.innerHTML = filtered.map(p => `
+                <div class="contact-item ${activeProgrammerId === p.id ? 'active' : ''}" onclick="openChat('${p.name}','${p.role}','${p.id}')">
+                    <div class="contact-avatar ${p.avatarClass}">
+                        ${p.id}
+                        <div class="${p.online ? 'online-dot' : 'offline-dot'}"></div>
+                    </div>
+                    <div class="contact-info">
+                        <div class="contact-name">${p.name}</div>
+                        <div class="contact-role">${p.role}</div>
+                        <div class="contact-preview">${p.preview}</div>
+                    </div>
+                    <div class="contact-meta">
+                        <div class="contact-time">${p.time}</div>
+                        ${p.unread ? `<div class="unread-badge">${p.unread}</div>` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+
+        function filterContacts() {
+            const input = document.getElementById('chatSearchInput');
+            contactFilter = input.value.trim();
+            renderContacts();
+        }
+
+
+        /**
+         * ═══════════════════════════════════════════════════════════════
+         *  CHAT – OPEN, SEND, RENDER MESSAGES
+         * ═══════════════════════════════════════════════════════════════
+         */
+        function openChat(name, role, id) {
+            activeProgrammerId = id;
+            const p = programmers.find(x => x.id === id);
+            if (!p) return;
+
+            showPage('chat');
+            renderContacts();
+
+            const main = document.getElementById('chatMain');
+            main.innerHTML = `
+                <div class="chat-header">
+                    <div class="chat-header-left">
+                        <div class="chat-back-btn" onclick="backToContactList()" title="رجوع">→</div>
+                        <div class="contact-avatar ${p.avatarClass}" style="width:42px;height:42px;border-radius:12px;font-size:14px;font-weight:700;color:#0d0d0d;display:flex;align-items:center;justify-content:center;position:relative;">
+                            ${p.id}
+                            <div class="${p.online ? 'online-dot' : 'offline-dot'}"></div>
+                        </div>
+                        <div class="chat-header-info">
+                            <h3>${p.name}</h3>
+                            <p>${p.online ? '● متصل الآن' : '○ غير متصل'} · ${p.role}</p>
+                        </div>
+                    </div>
+                    <div class="chat-header-actions">
+                        <div class="icon-btn" title="عرض الملف الشخصي">👤</div>
+                        <div class="icon-btn" title="ملفاته">📂</div>
+                        <div class="icon-btn" onclick="showPage('home')" title="إغلاق">✕</div>
+                    </div>
+                </div>
+                <div class="messages-area" id="messagesArea">
+                    <div class="day-divider">اليوم</div>
+                    ${p.msgs.map(renderMsg).join('')}
+                </div>
+                <div class="chat-input-area">
+                    <button class="icon-btn">📎</button>
+                    <textarea id="chatInput" class="chat-input-box" placeholder="اكتب رسالتك..." rows="1"
+                        onkeydown="handleKey(event,'${p.id}')"></textarea>
+                    <button class="send-btn" onclick="sendMsg('${p.id}')">➤</button>
+                </div>
+            `;
+
+            const chatPage = document.getElementById('page-chat');
+            if (chatPage) chatPage.classList.add('chat-open');
+
+            scrollToBottom();
+        }
+
+        function backToContactList() {
+            const chatPage = document.getElementById('page-chat');
+            if (chatPage) chatPage.classList.remove('chat-open');
+        }
+
+
+        function renderMsg(m) {
+            const isSent = m.from === 'me';
+            const avatarColor = isSent ? 'background:linear-gradient(135deg,#555,#777);' : '';
+            const avatarClass = !isSent ? (programmers.find(p => p.msgs && p.msgs.some(x => x === m))?.avatarClass || 'gold-av') :
+                '';
+            return `
+                <div class="msg ${isSent ? 'sent' : 'recv'}">
+                    <div class="msg-avatar ${avatarClass}" style="${avatarColor}width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#0d0d0d;">
+                        ${isSent ? 'أ' : (activeProgrammerId || '')}
+                    </div>
+                    <div>
+                        <div class="msg-bubble">
+                            ${m.text.replace(/\n/g, '<br/>')}
+                            ${m.code ? `<div class="msg-code">${m.code.replace(/\n/g,'<br/>')}</div>` : ''}
+                        </div>
+                        <div class="msg-time">${m.time}</div>
+                    </div>
+                </div>
+            `;
+        }
+
+
+        function sendMsg(id) {
+            const input = document.getElementById('chatInput');
+            const text = input.value.trim();
+            if (!text) return;
+
+            const p = programmers.find(x => x.id === id);
+            if (!p) return;
+
+            const now = new Date();
+            const time = `${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')}`;
+
+            p.msgs.push({ from: 'me', text, time });
+            input.value = '';
+
+            const area = document.getElementById('messagesArea');
+            if (area) {
+                area.innerHTML = `<div class="day-divider">اليوم</div>` + p.msgs.map(renderMsg).join('');
+                scrollToBottom();
+            }
+
+            // Simulate reply
+            setTimeout(() => {
+                const replies = [
+                    'شكراً على رسالتك! 😊 أنا هنا لمساعدتك.',
+                    'ممتاز! هذا سؤال جيد. دعني أفكر في الأمر...',
+                    'أهلاً بك! يمكننا مناقشة هذا بالتفصيل.',
+                    'لدي خبرة كبيرة في هذا المجال. كيف يمكنني مساعدتك تحديداً؟',
+                    'ملاحظة جيدة! سأضيف هذا إلى قائمة الميزات القادمة.',
+                ];
+                const reply = replies[Math.floor(Math.random() * replies.length)];
+                const replyTime = new Date();
+                const rt = `${replyTime.getHours()}:${String(replyTime.getMinutes()).padStart(2,'0')}`;
+                p.msgs.push({ from: 'them', text: reply, time: rt });
+                const area2 = document.getElementById('messagesArea');
+                if (area2) {
+                    area2.innerHTML = `<div class="day-divider">اليوم</div>` + p.msgs.map(renderMsg).join('');
+                    scrollToBottom();
+                }
+            }, 900 + Math.random() * 700);
+        }
+
+
+        function handleKey(e, id) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMsg(id);
+            }
+        }
+
+
+        function scrollToBottom() {
+            const area = document.getElementById('messagesArea');
+            if (area) area.scrollTop = area.scrollHeight;
+        }
+
+
+        /**
+         * ═══════════════════════════════════════════════════════════════
+         *  PAGE NAVIGATION
+         * ═══════════════════════════════════════════════════════════════
+         */
+        function toggleMobileNav() {
+            const menu = document.getElementById('mobileNavMenu');
+            if (menu) menu.classList.toggle('open');
+        }
+        function closeMobileNav() {
+            const menu = document.getElementById('mobileNavMenu');
+            if (menu) menu.classList.remove('open');
+        }
+
+        function showPage(name) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            const page = document.getElementById('page-' + name);
+            if (!page) return;
+            page.classList.add('active');
+            page.scrollIntoView({ block: 'start' });
+            window.scrollTo(0, 0);
+
+            // Hide the nav bar + AI widget on the login screen (full-screen auth look)
+            const nav = document.getElementById('mainNav');
+            const aiWidget = document.getElementById('aiWidget');
+            const hideChrome = (name === 'login');
+            if (nav) nav.style.display = hideChrome ? 'none' : 'flex';
+            if (aiWidget) aiWidget.style.display = hideChrome ? 'none' : '';
+            closeMobileNav();
+
+            // Close AI chat when navigating to chat page
+            if (name === 'chat') {
+                const box = document.getElementById('aiChatBox');
+                if (box) box.classList.remove('open');
+                // Default to contact list view on mobile; openChat() re-adds this after showPage()
+                const chatPage = document.getElementById('page-chat');
+                if (chatPage) chatPage.classList.remove('chat-open');
+            }
+        }
+
+
+        /**
+         * ═══════════════════════════════════════════════════════════════
+         *  FILTER FILES
+         * ═══════════════════════════════════════════════════════════════
+         */
+        function filterFiles(btn, cat) {
+            document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+            btn.classList.add('active');
+            document.querySelectorAll('.file-card').forEach(card => {
+                card.style.display = (cat === 'all' || card.dataset.cat === cat) ? '' : 'none';
+            });
+        }
+
+
+        /**
+         * ═══════════════════════════════════════════════════════════════
+         *  AI CHAT WIDGET
+         * ═══════════════════════════════════════════════════════════════
+         */
+        let aiChatOpen = false;
+
+
+        function toggleAiChat() {
+            const box = document.getElementById('aiChatBox');
+            aiChatOpen = !aiChatOpen;
+            box.classList.toggle('open', aiChatOpen);
+            if (aiChatOpen) {
+                document.getElementById('aiInput').focus();
+            }
+        }
+
+        /**
+         * ═══════════════════════════════════════════════════════════════
+         *  DRAGGABLE AI WIDGET — يسمح بسحب الدائرة الصفراء لأي مكان بالشاشة
+         * ═══════════════════════════════════════════════════════════════
+         */
+        (function initDraggableAiWidget() {
+            const widget = document.getElementById('aiWidget');
+            const toggleBtn = document.getElementById('aiToggleBtn');
+            if (!widget || !toggleBtn) return;
+
+            let dragging = false;
+            let dragMoved = false;
+            let startX = 0, startY = 0;
+            let startLeft = 0, startTop = 0;
+            let suppressClick = false;
+
+            function onPointerDown(e) {
+                dragging = true;
+                dragMoved = false;
+                const rect = widget.getBoundingClientRect();
+                startLeft = rect.left;
+                startTop = rect.top;
+                startX = e.clientX;
+                startY = e.clientY;
+                widget.classList.add('dragging');
+                try { toggleBtn.setPointerCapture(e.pointerId); } catch (err) {}
+            }
+
+            function onPointerMove(e) {
+                if (!dragging) return;
+                const dx = e.clientX - startX;
+                const dy = e.clientY - startY;
+                if (Math.abs(dx) > 4 || Math.abs(dy) > 4) dragMoved = true;
+                if (!dragMoved) return;
+
+                const rect = widget.getBoundingClientRect();
+                let newLeft = startLeft + dx;
+                let newTop = startTop + dy;
+                const maxLeft = window.innerWidth - rect.width - 6;
+                const maxTop = window.innerHeight - rect.height - 6;
+                newLeft = Math.max(6, Math.min(newLeft, maxLeft));
+                newTop = Math.max(6, Math.min(newTop, maxTop));
+
+                widget.style.left = newLeft + 'px';
+                widget.style.top = newTop + 'px';
+                widget.style.right = 'auto';
+                widget.style.bottom = 'auto';
+            }
+
+            function onPointerUp(e) {
+                if (!dragging) return;
+                dragging = false;
+                widget.classList.remove('dragging');
+                if (dragMoved) {
+                    suppressClick = true;
+                }
+            }
+
+            toggleBtn.addEventListener('pointerdown', onPointerDown);
+            window.addEventListener('pointermove', onPointerMove);
+            window.addEventListener('pointerup', onPointerUp);
+            window.addEventListener('pointercancel', onPointerUp);
+
+            // يمنع فتح/إغلاق الشات لو المستخدم كان يسحب الدائرة وليس يضغط عليها
+            toggleBtn.addEventListener('click', function (e) {
+                if (suppressClick) {
+                    e.stopImmediatePropagation();
+                    e.preventDefault();
+                    suppressClick = false;
+                }
+            }, true);
+        })();
+
+
+        /**
+         * sendAiMsg – يرسل رسالة المستخدم إلى الخادم ويعرض الرد
+         * ملاحظة: الـ fetch يتصل بـ http://127.0.0.1:8000/chat كما هو مطلوب
+         */
+        async function sendAiMsg() {
+            const input = document.getElementById('aiInput');
+            const msg = input.value.trim();
+            if (!msg) return;
+            async function sendAiMsg() {
+    console.log("تم استدعاء الدالة بنجاح!"); // أضف هذا السطر فقط للتجربة
+    
+    const input = document.getElementById('aiInput');
+    // ... باقي الكود
+}
+
+            // 1. إضافة رسالة المستخدم فوراً للواجهة
+            addMessageToUI(msg, 'user');
+            input.value = '';
+
+            try {
+                // 2. إرسال الطلب للسيرفر (العنوان كما هو مطلوب)
+                const response = await fetch('http://127.0.0.1:8000/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: msg })
+                });
+
+                if (!response.ok) throw new Error('Network error');
+
+                const data = await response.json();
+
+                // 3. إضافة رد السيرفر
+                addMessageToUI(data.reply, 'ai');
+
+            } catch (error) {
+                console.error('Error:', error);
+                addMessageToUI('عذراً، لا يمكنني الاتصال بالسيرفر حالياً. جرب لاحقاً.', 'ai');
+            }
+        }
+
+
+        /**
+         * addMessageToUI – دالة مساعدة لإضافة الرسائل للواجهة
+         */
+        function addMessageToUI(text, sender) {
+            const container = document.getElementById('aiMessages');
+            const msgDiv = document.createElement('div');
+            msgDiv.className = `ai-msg ${sender}`;
+            msgDiv.innerHTML = `
+                <div class="ai-msg-avatar">${sender === 'user' ? '👤' : '🤖'}</div>
+                <div>
+                    <div class="ai-msg-bubble">${text}</div>
+                    <div class="ai-time">الآن</div>
+                </div>
+            `;
+            container.appendChild(msgDiv);
+            container.scrollTop = container.scrollHeight;
+        }
+
+
+        function aiQuickAsk(text) {
+            document.getElementById('aiInput').value = text;
+            sendAiMsg();
+        }
+
+
+        /**
+         * ═══════════════════════════════════════════════════════════════
+         *  AUTH
+         * ═══════════════════════════════════════════════════════════════
+         */
+        function toggleLoginSubmit() {
+            const checkbox = document.getElementById('agreeTerms');
+            const btn = document.getElementById('loginSubmitBtn');
+            const googleWrap = document.getElementById('googleSignInBtn');
+            if (btn && checkbox) btn.disabled = !checkbox.checked;
+            if (googleWrap && checkbox) googleWrap.classList.toggle('disabled', !checkbox.checked);
+        }
+
+        function handleLogin(event) {
+            event.preventDefault();
+            const checkbox = document.getElementById('agreeTerms');
+            if (checkbox && !checkbox.checked) return;
+            // Demo login — any credentials proceed straight to the home page
+            showPage('home');
+        }
+
+        /**
+         * ═══════════════════════════════════════════════════════════════
+         *  GOOGLE SIGN-IN
+         * ═══════════════════════════════════════════════════════════════
+         */
+        const GOOGLE_CLIENT_ID = '1075906280245-9q988bkdttm2qahdqbjvuhuddpgjdd42.apps.googleusercontent.com';
+
+        function initGoogleSignIn() {
+            if (window.google && google.accounts && google.accounts.id) {
+                google.accounts.id.initialize({
+                    client_id: GOOGLE_CLIENT_ID,
+                    callback: handleGoogleCredential
+                });
+                const target = document.getElementById('googleSignInBtn');
+                if (target) {
+                    google.accounts.id.renderButton(target, {
+                        theme: 'filled_black',
+                        size: 'large',
+                        text: 'continue_with',
+                        shape: 'pill',
+                        width: 320
+                    });
+                }
+            } else {
+                setTimeout(initGoogleSignIn, 200);
+            }
+        }
+        window.addEventListener('load', initGoogleSignIn);
+
+        function handleGoogleCredential(response) {
+            const checkbox = document.getElementById('agreeTerms');
+            if (checkbox && !checkbox.checked) {
+                alert('الرجاء الموافقة على الشروط والأحكام أولاً');
+                return;
+            }
+            try {
+                const payload = JSON.parse(atob(response.credential.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
+                console.log('Google user:', payload.email, payload.name);
+                applyUserAvatar({ name: payload.name, picture: payload.picture });
+            } catch (e) {
+                console.warn('Could not decode Google credential', e);
+            }
+            showPage('home');
+        }
+
+        function applyUserAvatar({ name, picture }) {
+            const avatar = document.getElementById('navAvatarBtn');
+            if (!avatar) return;
+            if (picture) {
+                avatar.style.backgroundImage = `url('${picture}')`;
+                avatar.classList.add('has-photo');
+                avatar.textContent = '';
+                avatar.title = name || '';
+            } else if (name) {
+                avatar.classList.remove('has-photo');
+                avatar.style.backgroundImage = '';
+                avatar.textContent = name.trim().charAt(0).toUpperCase();
+                avatar.title = name;
+            }
+        }
+
+
+        /**
+         * ═══════════════════════════════════════════════════════════════
+         *  ACCOUNT UPGRADE ("تطوير الحساب") + SELL FLOW
+         * ═══════════════════════════════════════════════════════════════
+         */
+        let accountUpgraded = false;
+
+        function handleSellClick() {
+            if (accountUpgraded) {
+                showPage('sell');
+            } else {
+                showPage('develop-lock');
+            }
+        }
+
+        function toggleDevelopSubmit() {
+            const checkbox = document.getElementById('agreeSellerPolicy');
+            const btn = document.getElementById('developSubmitBtn');
+            if (btn && checkbox) btn.disabled = !checkbox.checked;
+        }
+
+        function submitDevelopForm(event) {
+            event.preventDefault();
+            const checkbox = document.getElementById('agreeSellerPolicy');
+            if (checkbox && !checkbox.checked) return;
+            const name = document.getElementById('devName').value.trim() || 'مستخدم جديد';
+
+            accountUpgraded = true;
+            addProgrammerCard(name);
+
+            event.target.reset();
+            toggleDevelopSubmit();
+            showPage('home');
+        }
+
+        function addProgrammerCard(name) {
+            const grid = document.querySelector('.prog-grid');
+            if (!grid) return;
+
+            const parts = name.trim().split(/\s+/);
+            const initials = ((parts[0] ? parts[0][0] : '') + (parts[1] ? parts[1][0] : '')).toUpperCase() || 'ي';
+            const handle = '@' + (parts[0] || 'user').toLowerCase().replace(/[^a-zA-Z0-9أ-ي]/g, '');
+
+            const card = document.createElement('div');
+            card.className = 'prog-card';
+            card.innerHTML = `
+                <div class="prog-card-header dark-grad">
+                    <div class="prog-badge" style="background:rgba(34,197,94,0.85);color:#0d0d0d;">جديد</div>
+                    <div class="prog-avatar" style="background:linear-gradient(135deg,var(--cyan2),var(--gold))">${initials}</div>
+                </div>
+                <div class="prog-card-body">
+                    <div class="prog-name">${name}</div>
+                    <div class="prog-handle">${handle}</div>
+                    <div class="prog-role">Verified Seller</div>
+                    <div class="prog-meta">
+                        <span>🏙️ السعودية</span>
+                        <span>⏱️ عضو جديد</span>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;align-items:center;">
+                        <div class="prog-rating">⭐ جديد</div>
+                        <div class="prog-sales">0 عملية بيع</div>
+                    </div>
+                </div>
+                <div class="prog-card-footer">
+                    <button class="view-btn" onclick="openChat('${name}','Verified Seller','${initials}'); event.stopPropagation()">💬 راسله الآن</button>
+                </div>
+            `;
+            card.onclick = () => openChat(name, 'Verified Seller', initials);
+            grid.appendChild(card);
+        }
+
+        function previewSellImage(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const drop = document.getElementById('sellImageDrop');
+                drop.innerHTML = `<img src="${e.target.result}" alt="معاينة الملف" />`;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function submitSellForm(event) {
+            event.preventDefault();
+
+            const name = document.getElementById('sellName').value.trim() || 'ملف بدون اسم';
+            const desc = document.getElementById('sellDesc').value.trim() || 'لا يوجد وصف';
+            const price = document.getElementById('sellPrice').value.trim() || '0';
+            const imgHtml = document.getElementById('sellImageDrop').querySelector('img');
+            const previewImg = imgHtml ? imgHtml.src : null;
+
+            const grid = document.querySelector('.files-grid');
+            if (grid) {
+                const card = document.createElement('div');
+                card.className = 'file-card';
+                card.dataset.cat = 'web';
+                card.innerHTML = `
+                    <div class="file-preview" style="${previewImg ? `background:url('${previewImg}') center/cover;` : ''}">
+                        ${previewImg ? '' : `
+                        <div class="file-lang">ملفك · جديد</div>
+                        <div class="file-dot green"></div>
+                        <span class="cm">// ${desc}</span>`}
+                    </div>
+                    <div class="file-body">
+                        <div class="file-title">${name}</div>
+                        <div class="file-tags"><span class="file-tag">ملفك</span></div>
+                        <div class="file-meta">
+                            <div class="file-seller">
+                                <div class="file-seller-avatar">أ</div>
+                                أنت
+                            </div>
+                            <div>⭐ جديد · ⬇️ 0</div>
+                        </div>
+                    </div>
+                    <div class="file-price-row">
+                        <div><span class="file-price">${price} <small>ر.س</small></span></div>
+                        <button class="buy-btn" onclick="openInvoice(this)">دفع الآن</button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            }
+
+            event.target.reset();
+            document.getElementById('sellImageDrop').innerHTML = 'اختر صورة للملف';
+            showPage('home');
+        }
+
+
+        /**
+         * ═══════════════════════════════════════════════════════════════
+         *  INVOICE MODAL / PAYMENT
+         * ═══════════════════════════════════════════════════════════════
+         */
+        function openInvoice(btnEl) {
+            const card = btnEl.closest('.file-card');
+            if (!card) return;
+
+            const fileName = card.querySelector('.file-title')?.innerText.trim() || '-';
+            const fileType = card.querySelector('.file-lang')?.innerText.trim() || '-';
+            const sellerName = card.querySelector('.file-seller')?.innerText.trim() || '-';
+            const priceEl = card.querySelector('.file-price');
+            const price = priceEl ? priceEl.innerText.trim() : '-';
+
+            document.getElementById('invFileName').innerText = fileName;
+            document.getElementById('invFileType').innerText = fileType;
+            document.getElementById('invFileSeller').innerText = sellerName;
+            document.getElementById('invFilePrice').innerText = price;
+            document.getElementById('invFileTotal').innerText = price;
+
+            document.getElementById('invoiceModal').classList.add('open');
+        }
+
+        function closeInvoice() {
+            document.getElementById('invoiceModal').classList.remove('open');
+        }
+
+        function payNow() {
+            window.location.href = 'yazan.html';
+        }
+
+
+        /**
+         * ═══════════════════════════════════════════════════════════════
+         *  INIT
+         * ═══════════════════════════════════════════════════════════════
+         */
+        renderContacts();
+        showPage('login');
+    </script>
+
+</body>
+</html>
